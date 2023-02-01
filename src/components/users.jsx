@@ -10,22 +10,19 @@ const Users = () => {
  }
 
  const renderPhrase = number => {
-  let lastEl = String(number).at(-1)
   if(number) {
-   if(number > 20 && lastEl == 2 || lastEl == 3 || lastEl == 4) {
-    number += ' человека'
-   }else if(number === 2 || number === 3 || number === 4) {
-    number += ' человека'
-   }else {
-    number += ' человек'
-   }
+    let z = number % 100 / 10;
+    let x = number % 10;
+    z >= 1.1 && z <= 1.4 ? number += ' человек':
+    x === 2 || x === 3 || x === 4 ? number += ' человека':
+    number += ' человек';
    return number + ' тусанёт с тобой сегодня'
   } else return 'Никто с тобой не тусанёт'
  }
 
  return (
  <>
-  <h4 className={'fs-4 badge m-2 ' + (users.length ? 'bg-primary' : 'bg-danger')}>{renderPhrase(users.length)}</h4>
+  <h4 className={'fs-4 badge m-2 ' + (users.length ? 'bg-primary' : 'bg-danger')}>{renderPhrase(14)}</h4>
   {users.length ? <table className="table">
    <thead>
     <tr>
