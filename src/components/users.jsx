@@ -11,18 +11,18 @@ const Users = () => {
 
  const renderPhrase = number => {
   if(number) {
-    let z = number % 100 / 10;
-    let x = number % 10;
+    let z = number % 100 / 10
+    let x = number % 10
     z >= 1.1 && z <= 1.4 ? number += ' человек':
     x === 2 || x === 3 || x === 4 ? number += ' человека':
-    number += ' человек';
-   return number + ' тусанёт с тобой сегодня'
+    number += ' человек'
+    return number + ' тусанёт с тобой сегодня'
   } else return 'Никто с тобой не тусанёт'
  }
 
  return (
  <>
-  <h4 className={'fs-4 badge m-2 ' + (users.length ? 'bg-primary' : 'bg-danger')}>{renderPhrase(14)}</h4>
+  <h4 className={'fs-4 badge m-2 ' + (users.length ? 'bg-primary' : 'bg-danger')}>{renderPhrase(users.length)}</h4>
   {users.length ? <table className="table">
    <thead>
     <tr>
