@@ -37,16 +37,16 @@ const Users = () => {
    <tbody>
     {users.map(row => 
      <tr key={row._id}>
-      <td key={row.name}>{row.name}</td>
+      <td>{row.name}</td>
       <td>
        {row.qualities.map(elem => 
        <span className={'badge bg-' + elem.color + ' m-1'} key={elem._id}>
         {elem.name}
        </span>)}
       </td>
-      <td key={Object.values(row.profession)[0]}>{Object.values(row.profession)[1]}</td>
-      <td key={row.completedMeetings}>{row.completedMeetings}</td>
-      <td key={row.rate}>{row.rate}/5</td>
+      <td>{Object.values(row.profession)[1]}</td>
+      <td>{row.completedMeetings}</td>
+      <td>{row.rate}/5</td>
       <td>
        <button className="btn btn-danger" onClick={() => handleDelete(row._id)}>delete</button>
       </td>
