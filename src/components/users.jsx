@@ -19,7 +19,7 @@ const Users = () => {
     return number + ' тусанёт с тобой сегодня'
   } else return 'Никто с тобой не тусанёт'
  }
-
+console.log(users)
  return (
  <>
   <h4 className={'fs-4 badge m-2 ' + (users.length ? 'bg-primary' : 'bg-danger')}>{renderPhrase(users.length)}</h4>
@@ -44,7 +44,7 @@ const Users = () => {
         {elem.name}
        </span>)}
       </td>
-      <td>{Object.values(row.profession)[1]}</td>
+      <td>{row.profession.name}</td>
       <td>{row.completedMeetings}</td>
       <td>{row.rate}/5</td>
       <td>
