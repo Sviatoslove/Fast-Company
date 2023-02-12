@@ -1,13 +1,8 @@
 
-const Bookmark = ({_id, bookmark, handleToggleBookmark}) => {
-
- const getIconClasses = () => {
-  return bookmark ? '-heart-fill' : ''
- }
- 
+const Bookmark = ({status, ...rest}) => {
  return <>
- <button onClick={() => handleToggleBookmark(_id)}>
-  <i className={'m-2 bi bi-bookmark' + getIconClasses()}></i>
+ <button {...rest}>
+  <i className={'m-2 bi bi-bookmark' + (status ? '-heart-fill' : '')}></i>
  </button>
  </>
 }

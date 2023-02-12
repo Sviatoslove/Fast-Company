@@ -1,7 +1,7 @@
 
 const Qualitie = ({color, name}) => {
  return <>
-  <span className={'badge bg-' + color + ' m-1'}>
+  <span className={'badge m-1 bg-' + color}>
    {name}
   </span>
  </>
