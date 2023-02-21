@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Bookmark from './bookmark'
-import Qualitie from './qualitie'
+import Quality from './quality'
 
 const User = (props) => {
   return (
@@ -9,8 +9,8 @@ const User = (props) => {
       <tr>
         <td>{props.name}</td>
         <td>
-          {props.qualities.map((qualitie) => (
-            <Qualitie key={qualitie._id} {...qualitie} />
+          {props.qualities.map((quality) => (
+            <Quality key={quality._id} {...quality} />
           ))}
         </td>
         <td>{props.profession.name}</td>
@@ -42,7 +42,7 @@ User.propTypes = {
   profession: PropTypes.object.isRequired,
   completedMeetings: PropTypes.number.isRequired,
   rate: PropTypes.number.isRequired,
-  bookmark: PropTypes.bool.isRequired,
+  bookmark: PropTypes.bool,
   onToggleBookmark: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 }

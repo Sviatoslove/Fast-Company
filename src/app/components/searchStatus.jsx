@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const SearchStatus = ({ numOfUsers }) => {
+const SearchStatus = ({ length }) => {
   const renderPhrase = (number) => {
     if (number) {
       const z = (number % 100) / 10
@@ -17,19 +17,15 @@ const SearchStatus = ({ numOfUsers }) => {
 
   return (
     <>
-      <h4
-        className={
-          'fs-4 badge m-2 ' + (numOfUsers ? 'bg-primary' : 'bg-danger')
-        }
-      >
-        {renderPhrase(numOfUsers)}
+      <h4 className={'fs-4 badge m-2 ' + (length ? 'bg-primary' : 'bg-danger')}>
+        {renderPhrase(length)}
       </h4>
     </>
   )
 }
 
 SearchStatus.propTypes = {
-  numOfUsers: PropTypes.number.isRequired
+  length: PropTypes.number.isRequired
 }
 
 export default SearchStatus
