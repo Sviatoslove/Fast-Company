@@ -13,7 +13,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
     }
   }
 
-  const getClassName = (item) => {
+  const renderSortArrow = (item) => {
     if (selectedSort.path === item) {
       return selectedSort.order === 'asc' ? 'up-fill' : 'down-fill'
     }
@@ -24,7 +24,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
       <tr>
         {Object.keys(columns).map((column) => (
           <th
-            className={'bi bi-caret-' + getClassName(columns[column].path)}
+            className={'bi bi-caret-' + renderSortArrow(columns[column].path)}
             key={column}
             onClick={() =>
               columns[column].path

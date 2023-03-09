@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import Pagination from './pagination'
+import Pagination from '../components/pagination'
 import api from '../api'
-import { paginate } from './utils/paginate'
-import GroupList from './groupList'
-import SearchStatus from './searchStatus'
-import objectsEqual from './utils/settings.users'
-import UserTable from './usersTable'
+import { paginate } from '../components/utils/paginate'
+import GroupList from '../components/groupList'
+import SearchStatus from '../components/searchStatus'
+import objectsEqual from '../components/utils/settings.users'
+import UserTable from '../components/usersTable'
 import _ from 'lodash'
 
 const Users = () => {
