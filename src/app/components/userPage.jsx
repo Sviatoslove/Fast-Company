@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import api from '../api'
 import QualitiesList from './qualitiesList'
 import { useHistory } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-const User = ({ id }) => {
+const UserPage = ({ userId }) => {
   const [user, setUser] = useState()
   const history = useHistory()
 
   useEffect(() => {
-    api.users.getById(id).then((data) => setUser(data))
+    api.users.getById(userId).then((data) => setUser(data))
   }, [])
 
   const handleToUsers = () => {
@@ -33,4 +34,8 @@ const User = ({ id }) => {
   )
 }
 
-export default User
+UserPage.propTypes = {
+  userId: PropTypes.string.isRequired
+}
+
+export default UserPage
