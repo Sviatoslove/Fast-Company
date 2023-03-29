@@ -5,13 +5,15 @@ import { paginate } from './utils/paginate'
 import GroupList from './groupList'
 import SearchStatus from './searchStatus'
 import objectsEqual from './utils/settings.users'
-import UserTable from './usersTable'
+import UsersTable from './usersTable'
 import _ from 'lodash'
+import SearchInput from './searchInput'
 
 const UsersList = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [professions, setProfessions] = useState()
   const [selectedProf, setSelectedProf] = useState()
+  const [searchValue, setSearchValue] = useState('')
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
   const pageSize = 8
 
@@ -43,18 +45,29 @@ const UsersList = () => {
 
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedProf])
+  }, [selectedProf, searchValue])
 
   const handlePageChange = (pageIndex) => {
     setCurrentPage(pageIndex)
   }
 
   const handleProfessionSelect = (item) => {
+    setSearchValue('')
     setSelectedProf(item)
+  }
+
+  const handleSearchChange = ({ target }) => {
+    setSelectedProf()
+    setSearchValue(target.value)
   }
 
   const handleSort = (item) => {
     setSortBy(item)
+  }
+
+  const clearFilter = () => {
+    setSelectedProf()
+    setSearchValue('')
   }
 
   if (users) {
@@ -62,18 +75,18 @@ const UsersList = () => {
       ? users.filter((user) =>
           objectsEqual(user.profession, selectedProf) ? user.profession : ''
         )
+      : searchValue
+      ? users.filter((user) => user.name.toLowerCase().includes(searchValue))
       : users
 
     const count = filteredUsers.length
+
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
+
     const userCrop = paginate(sortedUsers, currentPage, pageSize)
 
-    const clearFilter = () => {
-      setSelectedProf()
-    }
-
     return (
-      <div className='d-flex'>
+      <div className='d-flex px-4'>
         {professions && (
           <div className='d-flex flex-column flex-shrink=0 p-3'>
             <GroupList
@@ -86,10 +99,13 @@ const UsersList = () => {
             </button>
           </div>
         )}
-        <div className='d-flex flex-column'>
+        <div className='d-flex flex-column w-100'>
           <SearchStatus length={count} />
+
+          <SearchInput onChange={handleSearchChange} value={searchValue} />
+
           {count > 0 && (
-            <UserTable
+            <UsersTable
               users={userCrop}
               onSort={handleSort}
               selectedSort={sortBy}
