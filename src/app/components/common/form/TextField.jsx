@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { getInputClasses } from '../../utils'
 
 const TextField = ({ label, value, name, type, onChange, error }) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -8,9 +9,6 @@ const TextField = ({ label, value, name, type, onChange, error }) => {
     setShowPassword((state) => !state)
   }
 
-  const getInputClasses = () => {
-    return 'form-control' + (error && value !== '' ? ' is-invalid' : '')
-  }
   return (
     <div className='mb-4'>
       <label htmlFor={name}>{label}</label>
@@ -21,7 +19,7 @@ const TextField = ({ label, value, name, type, onChange, error }) => {
           name={name}
           onChange={onChange}
           value={value}
-          className={getInputClasses()}
+          className={getInputClasses('form-control', error)}
         />
         {type === 'password' && (
           <button

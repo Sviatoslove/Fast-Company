@@ -1,0 +1,43 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;900&display=swap');
+
+$utilities: map-merge(
+  $utilities,
+  (
+    'width': (
+      property: width,
+      class: w,
+      values: (
+        content: fit-content
+      )
+    ),
+    'color': (
+      property: color,
+      class: c,
+      values: (
+        jack: #043399
+      )
+    ),
+    'font-family': (
+      property: font-family,
+      class: ff,
+      values: (
+        roboto: 'Roboto Slab'
+      )
+    ),
+    'font-weight': (
+      property: font-weight,
+      class: fw,
+      values: (
+        900: 900,
+        400: 400
+      )
+    )
+  )
+);
+
+@import 'bootstrap/scss/utilities/api';

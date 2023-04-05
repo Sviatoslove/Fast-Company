@@ -21,17 +21,36 @@ export const validatorConfig = {
       messege: 'Пароль должен состоять минимум из восьми символов',
       value: 8
     }
+  },
+  profession: {
+    isRequired: {
+      messege: 'Обязательно выберите вашу профессию'
+    }
+  },
+  qualities: {
+    isRequired: {
+      messege: 'Обязательно выберите присущие вам качества'
+    }
+  },
+  license: {
+    isRequired: {
+      messege:
+        'Вы не можете пользоваться нашим сервисом не подтвердив лицензионное соглашение'
+    }
   }
 }
 
-export function validator(data, config) {
+export default function validator(data, config) {
   const errors = {}
   const validate = (validateMethod, data, config) => {
     let statusValidate
     switch (validateMethod) {
-      case 'isRequired':
-        statusValidate = data.trim() === ''
+      case 'isRequired': {
+        if (typeof data === 'boolean') statusValidate = !data
+        else if (Array.isArray(data)) statusValidate = data.length === 0
+        else statusValidate = data.trim() === ''
         break
+      }
       case 'isEmail': {
         const emailRegExp = /^\S+@\S+\.\S+$/g
         statusValidate = !emailRegExp.test(data)

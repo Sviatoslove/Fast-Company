@@ -25,7 +25,7 @@ module.exports = {
         avoidEscape: true
       }
     ],
-    'multiline-ternary': ['error', 'always-multiline'],
+    'multiline-ternary': ['off'],
     'no-trailing-spaces': ['error', { skipBlankLines: true }]
   }
 }
