@@ -11,8 +11,14 @@ const MultiSelectField = ({
   error,
   defaultValue
 }) => {
-  const optionsArray = options && formatDataForFields(options)
-  defaultValue = formatDataForFields(defaultValue)
+  let optionsArray
+  if (Object.values(options).length) {
+    optionsArray = formatDataForFields(options)
+  } else {
+    optionsArray = []
+  }
+
+  defaultValue = defaultValue.length ? formatDataForFields(defaultValue) : []
 
   const handleChange = (value) => {
     onChange({ target: { name, value } })

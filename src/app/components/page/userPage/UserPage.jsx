@@ -3,7 +3,6 @@ import api from '../../../api'
 import QualitiesList from '../../ui/qualities/QualitiesList'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import './userPage.scss'
 
 const UserPage = ({ userId }) => {
   const [user, setUser] = useState()

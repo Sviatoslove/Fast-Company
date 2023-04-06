@@ -26,14 +26,13 @@ const EditUserPage = ({ userId }) => {
     if (typeField === 'profession') {
       res = Object.values(professions).find((item) => item._id === data)
     } else if (typeField === 'qualities') {
-      res = data.reduce(
-        (acc, item) =>
-          (acc = [
-            ...acc,
-            { name: item.label, _id: item.value, color: item.color }
-          ]),
-        []
-      )
+      res = data.reduce((acc, item) => {
+        const obj = { name: item.label, _id: item.value }
+        Object.keys(item).forEach((key) => {
+          key !== 'label' && key !== 'value' && (obj[key] = item[key])
+        })
+        return (acc = [...acc, obj])
+      }, [])
     }
     return res
   }

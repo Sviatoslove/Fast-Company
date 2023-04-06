@@ -17,7 +17,9 @@ const SearchStatus = ({ length }) => {
 
   return (
     <>
-      <h4 className={'fs-4 badge m-2 ' + (length ? 'bg-primary' : 'bg-danger')}>
+      <h4
+        className={'fs-4 badge mb-4 ' + (length ? 'bg-primary' : 'bg-danger')}
+      >
         {renderPhrase(length)}
       </h4>
     </>

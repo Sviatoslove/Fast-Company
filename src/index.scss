@@ -12,7 +12,8 @@ $utilities: map-merge(
       property: width,
       class: w,
       values: (
-        content: fit-content
+        content: fit-content,
+        90vw: 90vw
       )
     ),
     'color': (
@@ -35,6 +36,13 @@ $utilities: map-merge(
       values: (
         900: 900,
         400: 400
+      )
+    ),
+    'shadow': (
+      property: box-shadow,
+      class: shadow,
+      values: (
+        custom: 4px 4px 10px 1px rgba(0, 0, 0, 0.3)
       )
     )
   )
