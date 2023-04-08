@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { validator, validatorConfig } from '../utils'
 import API from '../../api'
-import { CheckboxField, MultiSelectField, RadioField, SelectedField, TextField } from '../common/form'
+import {
+  CheckboxField,
+  MultiSelectField,
+  RadioField,
+  SelectedField,
+  TextField
+} from '../common/form'
 
 const RegisterForm = () => {
   const [data, setData] = useState({

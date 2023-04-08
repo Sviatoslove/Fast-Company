@@ -11,9 +11,7 @@ const SelectedField = ({
   name,
   onChange
 }) => {
-  const optionsArray = Object.values(options).length
-    ? formatDataForFields(options)
-    : []
+  const optionsArray = formatDataForFields(options)
 
   return (
     <div className='mb-4'>

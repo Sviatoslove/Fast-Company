@@ -28,6 +28,11 @@ export const qualities = {
     _id: '67rdca3eeb7f6fgeed471103',
     name: 'Неуверенный',
     color: 'dark'
+  },
+  avitolog: {
+    _id: '67rdca3eeb7f6fgeed471104',
+    name: 'Авитолог',
+    color: 'warning'
   }
 }
 

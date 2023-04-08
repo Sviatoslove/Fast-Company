@@ -8,64 +8,91 @@ import {
   TextField
 } from '../../common/form'
 import { useHistory } from 'react-router-dom'
+import { formatDataForFields } from '../../utils'
 
 const EditUserPage = ({ userId }) => {
-  const [user, setUser] = useState()
+  const [data, setData] = useState({
+    name: '',
+    email: '',
+    sex: '',
+    profession: '',
+    qualities: ''
+  })
+
   const [professions, setProfessions] = useState([])
   const [qualities, setQualities] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
   const history = useHistory()
 
   useEffect(() => {
-    API.users.getById(userId).then((user) => setUser(user))
+    API.users.getById(userId).then(({ profession, qualities, ...data }) =>
+      setData((prevState) => ({
+        ...prevState,
+        ...data,
+        qualities: formatDataForFields(qualities),
+        profession: profession._id
+      }))
+    )
     API.professions.fetchAll().then((data) => setProfessions(data))
-    API.qualities.fetchAll().then((data) => setQualities(data))
+    API.qualities
+      .fetchAll()
+      .then((data) => setQualities(data))
+      .then(() => setIsLoading(false))
   }, [])
 
-  const rollbackData = (data, typeField) => {
-    let res = data
-    if (typeField === 'profession') {
-      res = Object.values(professions).find((item) => item._id === data)
-    } else if (typeField === 'qualities') {
-      res = data.reduce((acc, item) => {
-        const obj = { name: item.label, _id: item.value }
-        Object.keys(item).forEach((key) => {
-          key !== 'label' && key !== 'value' && (obj[key] = item[key])
-        })
-        return (acc = [...acc, obj])
-      }, [])
-    }
-    return res
-  }
+  useEffect(() => {
+    if (data._id && Object.keys(professions).length) setIsLoading(false)
+  }, [data, professions])
 
   const handleChange = ({ target }) => {
-    setUser((state) => ({
+    setData((state) => ({
       ...state,
-      [target.name]: rollbackData(target.value, target.name)
+      [target.name]: target.value
     }))
+  }
+
+  const getQualities = (elements) => {
+    return elements.reduce((acc, elem) => {
+      Object.values(qualities).forEach((qualitie) => {
+        if (elem.value === qualitie._id) acc.push(qualitie)
+      })
+      return acc
+    }, [])
+  }
+
+  const getProfession = (id) => {
+    return Object.values(professions).find(
+      (profession) => profession._id === id
+    )
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    API.users.update(userId, user)
-    history.push('/users/' + userId)
+    API.users
+      .update(userId, {
+        ...data,
+        profession: getProfession(data.profession),
+        qualities: getQualities(data.qualities)
+      })
+      .then(() => history.push('/users/' + userId))
   }
 
   return (
     <>
-      {user ? (
+      {!isLoading ? (
         <div className='container mt-5'>
           <div className='row'>
             <div className='col-md-6 offset-md-3 shadow p-4'>
               <form onSubmit={handleSubmit}>
                 <TextField
                   label='Имя'
-                  value={user.name}
+                  value={data.name}
                   name='name'
                   onChange={handleChange}
                 />
                 <TextField
                   label='Электронная почта'
-                  value={user.email}
+                  value={data.email}
                   name='email'
                   type='email'
                   onChange={handleChange}
@@ -75,7 +102,7 @@ const EditUserPage = ({ userId }) => {
                   options={professions}
                   name='profession'
                   onChange={handleChange}
-                  value={user.profession._id}
+                  value={data.profession}
                 />
                 <RadioField
                   options={[
@@ -84,7 +111,7 @@ const EditUserPage = ({ userId }) => {
                     { label: 'Other', value: 'other' }
                   ]}
                   name='sex'
-                  value={user.sex}
+                  value={data.sex}
                   onChange={handleChange}
                 />
                 <MultiSelectField
@@ -92,7 +119,7 @@ const EditUserPage = ({ userId }) => {
                   name='qualities'
                   options={qualities}
                   onChange={handleChange}
-                  defaultValue={user.qualities}
+                  defaultValue={data.qualities}
                 />
                 <button type='submit' className='btn btn-primary w-100 mx-auto'>
                   Обновить

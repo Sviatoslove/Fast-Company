@@ -11,14 +11,7 @@ const MultiSelectField = ({
   error,
   defaultValue
 }) => {
-  let optionsArray
-  if (Object.values(options).length) {
-    optionsArray = formatDataForFields(options)
-  } else {
-    optionsArray = []
-  }
-
-  defaultValue = defaultValue.length ? formatDataForFields(defaultValue) : []
+  const optionsArray = formatDataForFields(options)
 
   const handleChange = (value) => {
     onChange({ target: { name, value } })
@@ -51,7 +44,7 @@ MultiSelectField.propTypes = {
     PropTypes.object.isRequired
   ]),
   onChange: PropTypes.func.isRequired,
-  defaultValue: PropTypes.array
+  defaultValue: PropTypes.oneOfType([PropTypes.array, PropTypes.string])
 }
 
 export default MultiSelectField
