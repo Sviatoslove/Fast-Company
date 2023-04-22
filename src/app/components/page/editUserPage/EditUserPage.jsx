@@ -9,6 +9,7 @@ import {
 } from '../../common/form'
 import { useHistory } from 'react-router-dom'
 import { formatDataForFields } from '../../utils'
+import { Container, LeftColumn, RightColumn } from '../../../../layoutStyles'
 
 const EditUserPage = ({ userId }) => {
   const [data, setData] = useState({
@@ -80,54 +81,61 @@ const EditUserPage = ({ userId }) => {
   return (
     <>
       {!isLoading ? (
-        <div className='container mt-5'>
-          <div className='row'>
-            <div className='col-md-6 offset-md-3 shadow p-4'>
-              <form onSubmit={handleSubmit}>
-                <TextField
-                  label='Имя'
-                  value={data.name}
-                  name='name'
-                  onChange={handleChange}
-                />
-                <TextField
-                  label='Электронная почта'
-                  value={data.email}
-                  name='email'
-                  type='email'
-                  onChange={handleChange}
-                />
-                <SelectedField
-                  label='Выбери свою профессию:'
-                  options={professions}
-                  name='profession'
-                  onChange={handleChange}
-                  value={data.profession}
-                />
-                <RadioField
-                  options={[
-                    { label: 'Male', value: 'male' },
-                    { label: 'Female', value: 'female' },
-                    { label: 'Other', value: 'other' }
-                  ]}
-                  name='sex'
-                  value={data.sex}
-                  onChange={handleChange}
-                />
-                <MultiSelectField
-                  label='Выберите свои лучшие качества:'
-                  name='qualities'
-                  options={qualities}
-                  onChange={handleChange}
-                  defaultValue={data.qualities}
-                />
-                <button type='submit' className='btn btn-primary w-100 mx-auto'>
-                  Обновить
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
+        <Container>
+          <LeftColumn className='col-md-4 mb-3 text-center mt-3'>
+            <button
+              type='button'
+              className='btn btn-warning w-80'
+              onClick={() => history.replace('/users/' + userId)}
+            >
+              Назад
+            </button>
+          </LeftColumn>
+          <RightColumn className='col-6 shadow p-3'>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                label='Имя'
+                value={data.name}
+                name='name'
+                onChange={handleChange}
+              />
+              <TextField
+                label='Электронная почта'
+                value={data.email}
+                name='email'
+                type='email'
+                onChange={handleChange}
+              />
+              <SelectedField
+                label='Выбери свою профессию:'
+                options={professions}
+                name='profession'
+                onChange={handleChange}
+                value={data.profession}
+              />
+              <RadioField
+                options={[
+                  { label: 'Male', value: 'male' },
+                  { label: 'Female', value: 'female' },
+                  { label: 'Other', value: 'other' }
+                ]}
+                name='sex'
+                value={data.sex}
+                onChange={handleChange}
+              />
+              <MultiSelectField
+                label='Выберите свои лучшие качества:'
+                name='qualities'
+                options={qualities}
+                onChange={handleChange}
+                defaultValue={data.qualities}
+              />
+              <button type='submit' className='btn btn-primary w-100 mx-auto'>
+                Обновить
+              </button>
+            </form>
+          </RightColumn>
+        </Container>
       ) : (
         'loading...'
       )}

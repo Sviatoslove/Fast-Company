@@ -4,6 +4,7 @@ import RadioField from './RadioField'
 import SearchInput from './SearchInput'
 import SelectedField from './SelectedField'
 import TextField from './TextField'
+import TextAreaField from './TextAreaField'
 
 export {
   CheckboxField,
@@ -11,5 +12,6 @@ export {
   RadioField,
   SearchInput,
   SelectedField,
-  TextField
+  TextField,
+  TextAreaField
 }

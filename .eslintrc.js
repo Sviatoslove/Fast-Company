@@ -26,6 +26,8 @@ module.exports = {
       }
     ],
     'multiline-ternary': ['off'],
+    'spaced-comment': 'off',
+    'react/jsx-no-comment-textnodes': 'off',
     'no-trailing-spaces': ['error', { skipBlankLines: true }]
   }
 }

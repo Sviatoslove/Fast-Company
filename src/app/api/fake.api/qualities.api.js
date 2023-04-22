@@ -1,4 +1,4 @@
-export const qualities = {
+const qualities = {
   tedious: {
     _id: '67rdca3eeb7f6fgeed471198',
     name: 'Нудила',
@@ -28,14 +28,8 @@ export const qualities = {
     _id: '67rdca3eeb7f6fgeed471103',
     name: 'Неуверенный',
     color: 'dark'
-  },
-  avitolog: {
-    _id: '67rdca3eeb7f6fgeed471104',
-    name: 'Авитолог',
-    color: 'warning'
   }
 }
-
 const fetchAll = () =>
   new Promise((resolve) => {
     window.setTimeout(function () {
