@@ -10,6 +10,7 @@ import {
 import { useHistory } from 'react-router-dom'
 import { formatDataForFields } from '../../utils'
 import { Container, LeftColumn, RightColumn } from '../../../../layoutStyles'
+import { BackHistoryButton } from '../../common/table'
 
 const EditUserPage = ({ userId }) => {
   const [data, setData] = useState({
@@ -83,13 +84,7 @@ const EditUserPage = ({ userId }) => {
       {!isLoading ? (
         <Container>
           <LeftColumn className='col-md-4 mb-3 text-center mt-3'>
-            <button
-              type='button'
-              className='btn btn-warning w-80'
-              onClick={() => history.replace('/users/' + userId)}
-            >
-              Назад
-            </button>
+            <BackHistoryButton />
           </LeftColumn>
           <RightColumn className='col-6 shadow p-3'>
             <form onSubmit={handleSubmit}>

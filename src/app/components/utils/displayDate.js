@@ -41,7 +41,8 @@ const declensionWord = (num = 0, word, end1, end2, end3) => {
   return num
 }
 
-export default function displayDate(ms) {
+export default function displayDate(timeStep) {
+  const ms = Number(timeStep)
   const date = new Date(ms)
   const dateNow = new Date()
 
