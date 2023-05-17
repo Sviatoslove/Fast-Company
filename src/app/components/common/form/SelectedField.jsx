@@ -44,7 +44,10 @@ SelectedField.defaultProps = {
 }
 
 SelectedField.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([
+    PropTypes.string.isRequired,
+    PropTypes.object.isRequired
+  ]),
   value: PropTypes.string,
   defaultOption: PropTypes.string,
   error: PropTypes.string,

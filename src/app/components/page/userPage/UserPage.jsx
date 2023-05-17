@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import QualitiesList from '../../ui/qualities/QualitiesList'
 import { Container, LeftColumn, RightColumn } from '../../../../layoutStyles'
 import { Comments, MeetingsCard, QualitiesCard, UserCard } from '../../ui'
-import API from '../../../api'
+import { useUsers } from '../../../hooks'
 
 const UserPage = ({ userId }) => {
-  const [user, setUser] = useState()
-
-  useEffect(() => {
-    API.users.getById(userId).then((data) => setUser(data))
-  }, [])
-
+  const { getById, isLoading } = useUsers()
+  const user = getById(userId)
+  if (isLoading) return 'Loading...'
   return (
     <Container>
       <LeftColumn>
