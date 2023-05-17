@@ -86,18 +86,22 @@ const UsersList = () => {
 
   return (
     <div className='d-flex px-4 p-3 shadow-custom mt-5 mx-auto w-90vw'>
-      {professions && (
-        <div className='d-flex flex-column flex-shrink=0 pe-3'>
-          <GroupList
-            selectedItem={selectedProf}
-            items={professions}
-            onItemSelect={handleProfessionSelect}
-          />
-          <button className='btn btn-secondary m-2' onClick={clearFilter}>
-            Очистить
-          </button>
-        </div>
-      )}
+      <div className='d-flex flex-column flex-shrink=0 pe-3 w-10vw'>
+        {professions ? (
+          <>
+            <GroupList
+              selectedItem={selectedProf}
+              items={professions}
+              onItemSelect={handleProfessionSelect}
+            />
+            <button className='btn btn-secondary m-2' onClick={clearFilter}>
+              Очистить
+            </button>
+          </>
+        ) : (
+          'Loading...'
+        )}
+      </div>
       <div className='d-flex flex-column w-100'>
         <SearchStatus length={count} />
 

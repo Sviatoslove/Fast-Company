@@ -11,6 +11,7 @@ const useProfessions = () => useContext(PreofessionsContext)
 const ProfessionsProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [professions, setProfessions] = useState([])
+  console.log('professions:', professions)
   const [error, setError] = useState(null)
 
   useEffect(() => {
