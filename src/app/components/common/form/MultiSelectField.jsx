@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import PropTypes from 'prop-types'
-import { formatDataForFields } from '../../utils'
+import { formatDataForFields } from '../../../utils'
 
 const MultiSelectField = ({
   name,

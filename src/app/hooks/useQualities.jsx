@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { errorCatcher } from '../components/utils'
+import { errorCatcher } from '../utils'
 import qualitiesService from '../services/qualities.service'
 import { toast } from 'react-toastify'
 
@@ -22,7 +22,7 @@ const QualitiesProvider = ({ children }) => {
       toast.error(error)
       setError(null)
     }
-  }, [])
+  }, [error])
 
   const getQualitiesList = async () => {
     try {
@@ -35,11 +35,10 @@ const QualitiesProvider = ({ children }) => {
     }
   }
 
-  const getQualities = (arrIds) =>
-    arrIds.map((id) => qualities.find((quality) => quality._id === id))
+  const getQuality = (id) => qualities.find((q) => q._id === id)
 
   return (
-    <QualitiesContext.Provider value={{ isLoading, qualities, getQualities }}>
+    <QualitiesContext.Provider value={{ isLoading, qualities, getQuality }}>
       {children}
     </QualitiesContext.Provider>
   )

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Pagination from '../../common/Pagination'
 import api from '../../../api'
-import { paginate, objectsEqual } from '../../utils'
+import { paginate, objectsEqual } from '../../../utils'
 import GroupList from '../../common/GroupList'
 import SearchStatus from '../../ui/SearchStatus'
 import UsersTable from '../../ui/UsersTable'
@@ -10,14 +10,14 @@ import { SearchInput } from '../../common/form'
 import { useUsers } from '../../../hooks/useUsers'
 
 const UsersList = () => {
+  const { users } = useUsers()
   const [currentPage, setCurrentPage] = useState(1)
   const [professions, setProfessions] = useState()
   const [selectedProf, setSelectedProf] = useState()
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
-  const pageSize = 8
 
-  const { users } = useUsers()
+  const pageSize = 8
 
   useEffect(() => {
     api.professions.fetchAll().then((data) => setProfessions(data))

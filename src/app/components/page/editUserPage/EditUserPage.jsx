@@ -8,7 +8,7 @@ import {
   TextField
 } from '../../common/form'
 import { useHistory } from 'react-router-dom'
-import { formatDataForFields } from '../../utils'
+import { formatDataForFields } from '../../../utils'
 import { Container, LeftColumn, RightColumn } from '../../../../layoutStyles'
 import { BackHistoryButton } from '../../common/table'
 

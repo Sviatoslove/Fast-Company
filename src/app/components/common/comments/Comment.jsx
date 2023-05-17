@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import UserAvatar from '../UserAvatar'
-import { displayDate } from '../../utils'
+import { displayDate } from '../../../utils'
 import api from '../../../api'
 
 const Comment = ({

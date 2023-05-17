@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { SelectedField, TextAreaField } from '../form'
 import api from '../../../api'
-import { validatorConfig, validator } from '../../utils'
+import { validatorConfig, validator } from '../../../utils'
 
 const initialData = { userId: '', content: '' }
 

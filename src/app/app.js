@@ -5,6 +5,7 @@ import Login from './layouts/Login'
 import Main from './layouts/Main'
 import Users from './layouts/Users'
 import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { ProfessionsProvider } from './hooks/useProfessions'
 import { QualitiesProvider } from './hooks/useQualities'
 
