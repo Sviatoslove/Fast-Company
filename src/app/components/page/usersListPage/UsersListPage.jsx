@@ -7,6 +7,7 @@ import SearchStatus from '../../ui/SearchStatus'
 import UsersTable from '../../ui/UsersTable'
 import _ from 'lodash'
 import { SearchInput } from '../../common/form'
+import { useUsers } from '../../../hooks/useUsers'
 
 const UsersList = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -16,15 +17,15 @@ const UsersList = () => {
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
   const pageSize = 8
 
-  const [users, setUsers] = useState()
+  const { users } = useUsers()
 
   useEffect(() => {
-    api.users.fetchAll().then((data) => setUsers(data))
     api.professions.fetchAll().then((data) => setProfessions(data))
   }, [])
 
   const handleDelete = (id) => {
-    setUsers((users) => users.filter((el) => el._id !== id))
+    console.log('id:', id)
+    //setUsers((users) => users.filter((el) => el._id !== id))
   }
 
   const handleToggleBookmark = (id) => {
@@ -36,7 +37,8 @@ const UsersList = () => {
           }
         : user
     )
-    setUsers(currentUsers)
+    //setUsers(currentUsers)
+    console.log('currentUsers:', currentUsers)
   }
 
   useEffect(() => {
@@ -66,64 +68,61 @@ const UsersList = () => {
     setSelectedProf()
   }
 
-  if (users) {
-    const filteredUsers = searchQuery
-      ? users.filter((user) =>
-          user.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      : selectedProf
-      ? users.filter((user) =>
-          objectsEqual(user.profession, selectedProf) ? user.profession : ''
-        )
-      : users
+  const filteredUsers = searchQuery
+    ? users.filter((user) =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : selectedProf
+    ? users.filter((user) =>
+        objectsEqual(user.profession, selectedProf) ? user.profession : ''
+      )
+    : users
 
-    const count = filteredUsers.length
+  const count = filteredUsers.length
 
-    const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
+  const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
 
-    const userCrop = paginate(sortedUsers, currentPage, pageSize)
+  const userCrop = paginate(sortedUsers, currentPage, pageSize)
 
-    return (
-      <div className='d-flex px-4 p-3 shadow-custom mt-5 mx-auto w-90vw'>
-        {professions && (
-          <div className='d-flex flex-column flex-shrink=0 pe-3'>
-            <GroupList
-              selectedItem={selectedProf}
-              items={professions}
-              onItemSelect={handleProfessionSelect}
-            />
-            <button className='btn btn-secondary m-2' onClick={clearFilter}>
-              Очистить
-            </button>
-          </div>
+  return (
+    <div className='d-flex px-4 p-3 shadow-custom mt-5 mx-auto w-90vw'>
+      {professions && (
+        <div className='d-flex flex-column flex-shrink=0 pe-3'>
+          <GroupList
+            selectedItem={selectedProf}
+            items={professions}
+            onItemSelect={handleProfessionSelect}
+          />
+          <button className='btn btn-secondary m-2' onClick={clearFilter}>
+            Очистить
+          </button>
+        </div>
+      )}
+      <div className='d-flex flex-column w-100'>
+        <SearchStatus length={count} />
+
+        <SearchInput onChange={handleSearchChange} value={searchQuery} />
+
+        {count > 0 && (
+          <UsersTable
+            users={userCrop}
+            onSort={handleSort}
+            selectedSort={sortBy}
+            onDelete={handleDelete}
+            onToggleBookmark={handleToggleBookmark}
+          />
         )}
-        <div className='d-flex flex-column w-100'>
-          <SearchStatus length={count} />
-
-          <SearchInput onChange={handleSearchChange} value={searchQuery} />
-
-          {count > 0 && (
-            <UsersTable
-              users={userCrop}
-              onSort={handleSort}
-              selectedSort={sortBy}
-              onDelete={handleDelete}
-              onToggleBookmark={handleToggleBookmark}
-            />
-          )}
-          <div className='d-flex justify-content-center'>
-            <Pagination
-              itemsCount={count}
-              pageSize={pageSize}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
+        <div className='d-flex justify-content-center'>
+          <Pagination
+            itemsCount={count}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
-    )
-  }
-  return 'loading...'
+    </div>
+  )
 }
 
 export default UsersList

@@ -10,8 +10,8 @@ const Quality = ({ color, name }) => {
 }
 
 Quality.propTypes = {
-  color: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired
+  color: PropTypes.string,
+  name: PropTypes.string
 }
 
 export default Quality
