@@ -2,5 +2,8 @@
   "apiEndpointFireBase": "https://fast-company-firebase-8db76-default-rtdb.europe-west1.firebasedatabase.app/",
   "apiEndpointMongoDb": "http://localhost:4000/api/v1/",
   "sentryDsn": "https://6cb4a20967a24d0c9d6480c8b25ebceb@o4505159992475648.ingest.sentry.io/4505160072429568",
+  "authKey": "AIzaSyDdtWasXBv6zEKjvr-Q5oph0z3nNWezl5A",
+  "urlSignUp": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=",
+  "urlLogIn": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=",
   "isFireBase": true
 }

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import professionsService from '../services/professions.service'
+import { professionsService } from '../services'
 import { errorCatcher } from '../utils'
 import { toast } from 'react-toastify'
 

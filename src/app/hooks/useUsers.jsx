@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import usersService from '../services/users.service'
+import { usersService } from '../services'
 import { toast } from 'react-toastify'
 import { errorCatcher } from '../utils'
 

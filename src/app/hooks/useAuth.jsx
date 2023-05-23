@@ -2,18 +2,17 @@ import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import usersService from '../services/users.service'
+import { usersService, setTokens } from '../services'
 import { errorCatcher } from '../utils'
+import configFile from '../config.json'
+
+const { authKey, urlSignUp, urlLogIn } = configFile
 
 const httpAuth = axios.create()
 
 const AuthContext = React.createContext()
 
 const useAuth = () => useContext(AuthContext)
-
-const TOKEN_KEY = 'jwt-token'
-const REFRESH_KEY = 'jwt-refresh-token'
-const EXPIRES_KEY = 'jwt-expires'
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({})
@@ -26,13 +25,6 @@ const AuthProvider = ({ children }) => {
     }
   }, [error])
 
-  const setTokens = ({ expiresIn = 3600, idToken, refreshToken }) => {
-    const expiresDate = new Date().getTime() + expiresIn * 1000
-    localStorage.setItem(TOKEN_KEY, idToken)
-    localStorage.setItem(REFRESH_KEY, refreshToken)
-    localStorage.setItem(EXPIRES_KEY, expiresDate)
-  }
-
   const createUser = async (data) => {
     try {
       const { content } = await usersService.create(data)
@@ -44,8 +36,7 @@ const AuthProvider = ({ children }) => {
   }
 
   const signUp = async ({ email, password, ...rest }) => {
-    const key = 'AIzaSyDdtWasXBv6zEKjvr-Q5oph0z3nNWezl5A'
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${key}`
+    const url = `${urlSignUp}${authKey}`
 
     try {
       const { data } = await httpAuth.post(url, {
@@ -55,14 +46,45 @@ const AuthProvider = ({ children }) => {
       })
       setTokens(data)
       createUser({ _id: data.localId, email, ...rest })
-      console.log('data:', data)
     } catch (error) {
-      errorCatcher(error, setError)
+      const { code, message } = error.response.data.error
+      if (code === 400) {
+        if (message === 'EMAIL_EXISTS') {
+          const errorObject = {
+            email: 'Пользователь с таким Email уже существует'
+          }
+          throw errorObject
+        }
+      }
+    }
+  }
+
+  const logIn = async ({ email, password, ...rest }) => {
+    const url = `${urlLogIn}${authKey}`
+
+    try {
+      const { data } = await httpAuth.post(url, {
+        email,
+        password,
+        returnSecureToken: true
+      })
+
+      setTokens({ ...data, ...rest })
+    } catch (error) {
+      const { code, message } = error.response.data.error
+      if (code === 400) {
+        if (message === 'EMAIL_NOT_FOUND') {
+          const errorObject = {
+            email: 'Пользователь с таким Email не зарегистрирован'
+          }
+          throw errorObject
+        }
+      }
     }
   }
 
   return (
-    <AuthContext.Provider value={{ signUp, currentUser }}>
+    <AuthContext.Provider value={{ signUp, logIn, currentUser }}>
       {children}
     </AuthContext.Provider>
   )
