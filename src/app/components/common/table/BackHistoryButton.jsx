@@ -6,7 +6,7 @@ const BackHistoryButton = () => {
   return (
     <button
       type='button'
-      className='btn btn-warning w-80'
+      className='btn btn-warning w-100'
       onClick={() => history.goBack()}
     >
       Назад

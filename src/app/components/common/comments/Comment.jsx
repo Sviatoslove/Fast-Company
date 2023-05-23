@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import UserAvatar from '../UserAvatar'
 import { displayDate } from '../../../utils'
-import api from '../../../api'
+import { useUsers } from '../../../hooks'
 
 const Comment = ({
   _id: id,
@@ -11,16 +11,8 @@ const Comment = ({
   created_at: created,
   onRemove
 }) => {
-  const [user, setUser] = useState()
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    setIsLoading(true)
-    api.users.getById(userId).then((data) => {
-      setUser(data)
-      setIsLoading(false)
-    })
-  }, [])
+  const { isLoading, getById } = useUsers()
+  const user = getById(userId)
 
   return (
     <div className='bg-light card-body  mb-3'>

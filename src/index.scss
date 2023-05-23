@@ -4,6 +4,7 @@
 @import 'bootstrap/scss/utilities';
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@1,700&display=swap');
 
 $utilities: map-merge(
   $utilities,
@@ -13,9 +14,32 @@ $utilities: map-merge(
       class: w,
       values: (
         content: fit-content,
+        100vw: 100vw,
         90vw: 90vw,
+        50vw: 50vw,
+        40vw: 40vw,
         10vw: 10vw,
         80: 80%
+      )
+    ),
+    'height': (
+      property: height,
+      class: h,
+      values: (
+        content: fit-content,
+        100vh: 100vh,
+        90vh: 90vh,
+        50vh: 50vh,
+        40vh: 40vh,
+        10vh: 10vh,
+        80: 80%
+      )
+    ),
+    'max-width': (
+      property: max-width,
+      class: mw,
+      values: (
+        none: none
       )
     ),
     'color': (
@@ -29,7 +53,8 @@ $utilities: map-merge(
       property: font-family,
       class: ff,
       values: (
-        roboto: 'Roboto Slab'
+        roboto: 'Roboto Slab',
+        BS: 'Balsamiq Sans'
       )
     ),
     'font-weight': (
@@ -45,6 +70,23 @@ $utilities: map-merge(
       class: shadow,
       values: (
         custom: 4px 4px 10px 1px rgba(0, 0, 0, 0.3)
+      )
+    ),
+    'border-radius': (
+      property: border-radius,
+      class: br,
+      values: (
+        5: 5px,
+        10: 10px
+      )
+    ),
+    'background-color': (
+      property: background-color,
+      class: bc,
+      values: (
+        yellow: rgb(244, 244, 158),
+        l-blue: rgba(75, 75, 207, 0.565),
+        white: rgb(191, 234, 226)
       )
     )
   )

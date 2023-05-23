@@ -4,9 +4,15 @@ import configFile from '../config.json'
 
 const { isFireBase, apiEndpointFireBase, apiEndpointMongoDb } = configFile
 
-axios.defaults.baseURL = isFireBase ? apiEndpointFireBase : apiEndpointMongoDb
+//создание instance или экземпляра axios с необходимой конфигурацией
+const http = axios.create({
+  baseURL: isFireBase ? apiEndpointFireBase : apiEndpointMongoDb
+})
 
-axios.interceptors.request.use(
+//изменение стандартной конфигурации axios
+//axios.defaults.baseURL = isFireBase ? apiEndpointFireBase : apiEndpointMongoDb
+
+http.interceptors.request.use(
   function (config) {
     if (configFile.isFireBase) {
       const containSlash = /\/$/gi.test(config.url)
@@ -28,7 +34,7 @@ function transformData(data) {
     : []
 }
 
-axios.interceptors.response.use(
+http.interceptors.response.use(
   (res) => {
     if (configFile.isFireBase) res.data = { content: transformData(res.data) }
     return res
@@ -47,8 +53,8 @@ axios.interceptors.response.use(
 )
 
 export const httpService = {
-  get: axios.get,
-  post: axios.post,
-  put: axios.put,
-  delete: axios.delete
+  get: http.get,
+  post: http.post,
+  put: http.put,
+  delete: http.delete
 }

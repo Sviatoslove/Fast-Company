@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { validator, validatorConfig } from '../../utils'
-import API from '../../api'
 import {
   CheckboxField,
   MultiSelectField,
@@ -8,6 +7,7 @@ import {
   SelectedField,
   TextField
 } from '../common/form'
+import { useProfessions, useQualities, useAuth } from '../../hooks'
 
 const RegisterForm = () => {
   const [data, setData] = useState({
@@ -18,14 +18,12 @@ const RegisterForm = () => {
     qualities: [],
     license: false
   })
+  const { professions } = useProfessions()
+  const { qualities } = useQualities()
   const [errors, setErrors] = useState({})
-  const [professions, setProfessions] = useState([])
-  const [qualities, setQualities] = useState({})
 
-  useEffect(() => {
-    API.professions.fetchAll().then((data) => setProfessions(data))
-    API.qualities.fetchAll().then((data) => setQualities(data))
-  }, [])
+  const { signUp, currentUser } = useAuth()
+  console.log('currentUser:', currentUser)
 
   const handleChange = ({ target }) => {
     setData((state) => ({ ...state, [target.name]: target.value }))
@@ -47,7 +45,10 @@ const RegisterForm = () => {
     event.preventDefault()
     const isVal = validate()
     if (isVal) return
-    console.log(data)
+
+    const newData = { ...data, qualities: data.qualities.map((q) => q.value) }
+    signUp(newData)
+    console.log('newData:', newData)
   }
 
   return (

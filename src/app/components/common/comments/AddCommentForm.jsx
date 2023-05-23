@@ -2,19 +2,16 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { SelectedField, TextAreaField } from '../form'
-import api from '../../../api'
 import { validatorConfig, validator } from '../../../utils'
+import { useUsers } from '../../../hooks'
 
 const initialData = { userId: '', content: '' }
 
 const AddCommentForm = ({ onSubmit }) => {
   const [data, setData] = useState(initialData)
   const [errors, setErrors] = useState({})
-  const [users, setUsers] = useState([])
 
-  useEffect(() => {
-    api.users.fetchAll().then((data) => setUsers(data))
-  }, [])
+  const { users } = useUsers()
 
   const handleChange = ({ target }) => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }))

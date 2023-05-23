@@ -9,7 +9,7 @@ import {
 } from '../../common/form'
 import { useHistory } from 'react-router-dom'
 import { formatDataForFields } from '../../../utils'
-import { Container, LeftColumn, RightColumn } from '../../../../layoutStyles'
+import { Container } from '../../../../layoutStyles'
 import { BackHistoryButton } from '../../common/table'
 
 const EditUserPage = ({ userId }) => {
@@ -82,54 +82,56 @@ const EditUserPage = ({ userId }) => {
   return (
     <>
       {!isLoading ? (
-        <Container>
-          <LeftColumn className='col-md-4 mb-3 text-center mt-3'>
+        <Container
+          classContainer='mt-5 shadow-custom br-10 p-5 w-40vw bc-white'
+          classRow=''
+        >
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label='Имя'
+              value={data.name}
+              name='name'
+              onChange={handleChange}
+            />
+            <TextField
+              label='Электронная почта'
+              value={data.email}
+              name='email'
+              type='email'
+              onChange={handleChange}
+            />
+            <SelectedField
+              label='Выбери свою профессию:'
+              options={professions}
+              name='profession'
+              onChange={handleChange}
+              value={data.profession}
+            />
+            <RadioField
+              options={[
+                { label: 'Male', value: 'male' },
+                { label: 'Female', value: 'female' },
+                { label: 'Other', value: 'other' }
+              ]}
+              name='sex'
+              value={data.sex}
+              onChange={handleChange}
+            />
+            <MultiSelectField
+              label='Выберите свои лучшие качества:'
+              name='qualities'
+              options={qualities}
+              onChange={handleChange}
+              defaultValue={data.qualities}
+            />
+            <button
+              type='submit'
+              className='btn btn-primary w-100 mx-auto mb-3'
+            >
+              Обновить
+            </button>
             <BackHistoryButton />
-          </LeftColumn>
-          <RightColumn className='col-6 shadow p-3'>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                label='Имя'
-                value={data.name}
-                name='name'
-                onChange={handleChange}
-              />
-              <TextField
-                label='Электронная почта'
-                value={data.email}
-                name='email'
-                type='email'
-                onChange={handleChange}
-              />
-              <SelectedField
-                label='Выбери свою профессию:'
-                options={professions}
-                name='profession'
-                onChange={handleChange}
-                value={data.profession}
-              />
-              <RadioField
-                options={[
-                  { label: 'Male', value: 'male' },
-                  { label: 'Female', value: 'female' },
-                  { label: 'Other', value: 'other' }
-                ]}
-                name='sex'
-                value={data.sex}
-                onChange={handleChange}
-              />
-              <MultiSelectField
-                label='Выберите свои лучшие качества:'
-                name='qualities'
-                options={qualities}
-                onChange={handleChange}
-                defaultValue={data.qualities}
-              />
-              <button type='submit' className='btn btn-primary w-100 mx-auto'>
-                Обновить
-              </button>
-            </form>
-          </RightColumn>
+          </form>
         </Container>
       ) : (
         'loading...'

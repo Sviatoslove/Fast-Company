@@ -10,7 +10,7 @@ const UserPage = ({ userId }) => {
   const user = getById(userId)
   if (isLoading) return 'Loading...'
   return (
-    <Container>
+    <Container classContainer='p-3 mt-5'>
       <LeftColumn>
         <UserCard user={user} />
         <QualitiesCard>
