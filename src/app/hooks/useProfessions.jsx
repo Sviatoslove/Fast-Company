@@ -4,9 +4,9 @@ import { professionsService } from '../services'
 import { errorCatcher } from '../utils'
 import { toast } from 'react-toastify'
 
-const PreofessionsContext = React.createContext()
+const ProfessionsContext = React.createContext()
 
-const useProfessions = () => useContext(PreofessionsContext)
+const useProfessions = () => useContext(ProfessionsContext)
 
 const ProfessionsProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -38,11 +38,11 @@ const ProfessionsProvider = ({ children }) => {
   const getProfession = (id) => professions.find((p) => p._id === id)
 
   return (
-    <PreofessionsContext.Provider
+    <ProfessionsContext.Provider
       value={{ isLoading, professions, getProfession }}
     >
       {children}
-    </PreofessionsContext.Provider>
+    </ProfessionsContext.Provider>
   )
 }
 

@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import QualitiesList from '../../ui/qualities/QualitiesList'
-import { Container, LeftColumn, RightColumn } from '../../../../layoutStyles'
+import { Container, LeftColumn, RightColumn } from '../../common/Containers'
 import { Comments, MeetingsCard, QualitiesCard, UserCard } from '../../ui'
 import { useUsers } from '../../../hooks'
+import { CommentsProvider } from '../../../hooks/useComments'
 
 const UserPage = ({ userId }) => {
-  const { getById, isLoading } = useUsers()
-  const user = getById(userId)
+  const { getUserById, isLoading } = useUsers()
+  const user = getUserById(userId)
   if (isLoading) return 'Loading...'
   return (
     <Container classContainer='p-3 mt-5'>
@@ -19,7 +20,9 @@ const UserPage = ({ userId }) => {
         <MeetingsCard completedMeetings={user.completedMeetings} />
       </LeftColumn>
       <RightColumn>
-        <Comments />
+        <CommentsProvider>
+          <Comments />
+        </CommentsProvider>
       </RightColumn>
     </Container>
   )

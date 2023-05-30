@@ -1,5 +1,5 @@
 import React from 'react'
-import Container from '../../layoutStyles/Container'
+import { Container } from '../components/common/Containers'
 import useMockData from '../utils/mockData'
 
 const Main = () => {

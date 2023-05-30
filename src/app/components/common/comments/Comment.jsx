@@ -11,8 +11,8 @@ const Comment = ({
   created_at: created,
   onRemove
 }) => {
-  const { isLoading, getById } = useUsers()
-  const user = getById(userId)
+  const { isLoading, getUserById } = useUsers()
+  const user = getUserById(userId)
 
   return (
     <div className='bg-light card-body  mb-3'>
@@ -22,7 +22,7 @@ const Comment = ({
         ) : (
           <div className='col'>
             <div className='d-flex flex-start '>
-              <UserAvatar />
+              <UserAvatar image={user.image} height='65' />
               <div className='flex-grow-1 flex-shrink-1'>
                 <div className='mb-4'>
                   <div className='d-flex justify-content-between align-items-center'>

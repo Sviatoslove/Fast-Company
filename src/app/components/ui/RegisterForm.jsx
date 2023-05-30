@@ -14,6 +14,7 @@ const RegisterForm = () => {
   const history = useHistory()
   const [data, setData] = useState({
     email: '',
+    name: '',
     password: '',
     profession: '',
     sex: 'male',
@@ -64,6 +65,13 @@ const RegisterForm = () => {
         name='email'
         onChange={handleChange}
         error={errors.email}
+      />
+      <TextField
+        label='Имя'
+        value={data.name}
+        name='name'
+        onChange={handleChange}
+        error={errors.name}
       />
       <TextField
         label='Пароль'

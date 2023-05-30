@@ -35,12 +35,26 @@ const UsersProvider = ({ children }) => {
     }
   }
 
-  const getById = (id) => {
+  const updateUser = async (data) => {
+    try {
+      const { content } = await usersService.update(data)
+      setUsers((prevState) =>
+        prevState.map((u) => (u._id === content._id ? content : u))
+      )
+      return content
+    } catch (error) {
+      errorCatcher(error, setError)
+    }
+  }
+
+  const getUserById = (id) => {
     return users.find((user) => user._id === id)
   }
 
   return (
-    <UsersContext.Provider value={{ isLoading, users, getById }}>
+    <UsersContext.Provider
+      value={{ isLoading, users, getUserById, updateUser }}
+    >
       {!isLoading ? children : <h3>Users is loading...</h3>}
     </UsersContext.Provider>
   )

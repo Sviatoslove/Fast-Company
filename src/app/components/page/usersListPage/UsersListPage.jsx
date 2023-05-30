@@ -6,22 +6,18 @@ import SearchStatus from '../../ui/SearchStatus'
 import UsersTable from '../../ui/UsersTable'
 import _ from 'lodash'
 import { SearchInput } from '../../common/form'
-import { useUsers, useProfessions } from '../../../hooks'
+import { useUsers, useProfessions, useAuth } from '../../../hooks'
 
 const UsersList = () => {
   const { users } = useUsers()
-  const { professions } = useProfessions()
+  const { currentUser } = useAuth()
+  const { isLoading: professionsLoading, professions } = useProfessions()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedProf, setSelectedProf] = useState()
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
 
   const pageSize = 8
-
-  const handleDelete = (id) => {
-    console.log('id:', id)
-    //setUsers((users) => users.filter((el) => el._id !== id))
-  }
 
   const handleToggleBookmark = (id) => {
     const currentUsers = users.map((user) =>
@@ -63,15 +59,20 @@ const UsersList = () => {
     setSelectedProf()
   }
 
-  const filteredUsers = searchQuery
-    ? users.filter((user) =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : selectedProf
-    ? users.filter((user) =>
-        objectsEqual(user.profession, selectedProf._id) ? user.profession : ''
-      )
-    : users
+  const filterUsers = (data) => {
+    const filteredUsers = searchQuery
+      ? data.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : selectedProf
+      ? data.filter((user) =>
+          objectsEqual(user.profession, selectedProf._id) ? user.profession : ''
+        )
+      : data
+    return filteredUsers.filter((u) => u._id !== currentUser._id)
+  }
+
+  const filteredUsers = filterUsers(users)
 
   const count = filteredUsers.length
 
@@ -82,7 +83,7 @@ const UsersList = () => {
   return (
     <div className='d-flex px-4 p-3 shadow-custom mt-5 mx-auto w-90vw br-10 bc-white'>
       <div className='d-flex flex-column flex-shrink=0 pe-3 w-10vw'>
-        {professions ? (
+        {!professionsLoading && (
           <>
             <GroupList
               selectedItem={selectedProf}
@@ -93,8 +94,6 @@ const UsersList = () => {
               Очистить
             </button>
           </>
-        ) : (
-          'Loading...'
         )}
       </div>
       <div className='d-flex flex-column w-100'>
@@ -107,7 +106,6 @@ const UsersList = () => {
             users={userCrop}
             onSort={handleSort}
             selectedSort={sortBy}
-            onDelete={handleDelete}
             onToggleBookmark={handleToggleBookmark}
           />
         )}

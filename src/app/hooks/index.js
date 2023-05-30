@@ -2,6 +2,7 @@ import { useProfessions, ProfessionsProvider } from './useProfessions'
 import { useUsers, UsersProvider } from './useUsers'
 import { useQualities, QualitiesProvider } from './useQualities'
 import { useAuth, AuthProvider } from './useAuth'
+import { useComments, CommentsProvider } from './useComments'
 
 export {
   useProfessions,
@@ -11,5 +12,7 @@ export {
   UsersProvider,
   QualitiesProvider,
   useAuth,
-  AuthProvider
+  AuthProvider,
+  useComments,
+  CommentsProvider
 }

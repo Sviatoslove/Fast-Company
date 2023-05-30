@@ -7,6 +7,16 @@ export const validatorConfig = {
       messege: 'Email введён не корректно'
     }
   },
+  name: {
+    isRequired: {
+      messege: 'Поле имя обязательно для заполнения'
+    },
+    min: {
+      messege:
+        'Имя введено не корректно, его длина должна быть более одного символа',
+      value: 2
+    }
+  },
   password: {
     isRequired: {
       messege: 'Поле пароль обязательно для заполнения'
@@ -36,11 +46,6 @@ export const validatorConfig = {
     isRequired: {
       messege:
         'Вы не можете пользоваться нашим сервисом не подтвердив лицензионное соглашение'
-    }
-  },
-  userId: {
-    isRequired: {
-      messege: 'Выбор пользователя обязателен'
     }
   },
   content: {

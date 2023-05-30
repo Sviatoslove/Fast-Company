@@ -3,10 +3,12 @@ import { useParams } from 'react-router-dom'
 import _ from 'lodash'
 import api from '../../api'
 import { AddCommentForm, CommentsList } from '../common/comments'
+import { useComments } from '../../hooks'
 
 const Comments = () => {
   const { userId } = useParams()
   const [comments, setComments] = useState([])
+  const { createComment } = useComments()
 
   useEffect(() => {
     api.comments.fetchCommentsForUser(userId).then((data) => setComments(data))
@@ -21,9 +23,10 @@ const Comments = () => {
   }
 
   const handleSubmit = (data) => {
-    api.comments
-      .add({ ...data, pageId: userId })
-      .then((data) => setComments([...comments, data]))
+    createComment(data)
+    //api.comments
+    //  .add({ ...data, pageId: userId })
+    //  .then((data) => setComments([...comments, data]))
   }
 
   const sortComments = _.orderBy(comments, ['created_at'], ['desc'])

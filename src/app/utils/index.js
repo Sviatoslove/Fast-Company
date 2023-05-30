@@ -1,5 +1,5 @@
 import paginate from './paginate'
-import objectsEqual from './settings.users'
+import objectsEqual, { randomInt } from './settings.users'
 import validator, { validatorConfig } from './validator'
 import getInputClasses from './getInputClasses'
 import formatDataForFields from './formatDataForFields'
@@ -14,5 +14,6 @@ export {
   getInputClasses,
   validatorConfig,
   displayDate,
-  errorCatcher
+  errorCatcher,
+  randomInt
 }

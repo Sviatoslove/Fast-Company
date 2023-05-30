@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
-import { SelectedField, TextAreaField } from '../form'
+import { TextAreaField } from '../form'
 import { validatorConfig, validator } from '../../../utils'
-import { useUsers } from '../../../hooks'
-
-const initialData = { userId: '', content: '' }
 
 const AddCommentForm = ({ onSubmit }) => {
-  const [data, setData] = useState(initialData)
+  const [data, setData] = useState({})
   const [errors, setErrors] = useState({})
-
-  const { users } = useUsers()
 
   const handleChange = ({ target }) => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }))
@@ -23,39 +18,26 @@ const AddCommentForm = ({ onSubmit }) => {
     return !!Object.keys(errors).length
   }
 
-  const clearForm = () => {
-    setData(initialData)
-  }
-
   const handleSubmit = (event) => {
     event.preventDefault()
 
     const isValid = validate()
     if (isValid) return
     onSubmit(data)
-    clearForm()
+    setData({})
   }
 
   useEffect(() => {
     validate()
   }, [data])
 
-  const isValid = !!Object.keys(errors).length
+  const isValid = !Object.keys(data).length || !!Object.keys(errors).length
 
   return (
     <form onSubmit={handleSubmit}>
-      <SelectedField
-        label={<h1>New comment</h1>}
-        options={users}
-        name='userId'
-        onChange={handleChange}
-        value={data.userId}
-        defaultOption='Выберите пользователя'
-        error={errors.userId}
-      />
       <TextAreaField
         onChange={handleChange}
-        value={data.content}
+        value={data.content || ''}
         error={errors.content}
       />
       <div className='d-grid justify-content-md-end mt-4'>

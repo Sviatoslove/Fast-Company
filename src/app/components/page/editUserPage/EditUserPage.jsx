@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import API from '../../../api'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import {
   MultiSelectField,
   RadioField,
   SelectedField,
   TextField
 } from '../../common/form'
-import { useHistory } from 'react-router-dom'
-import { formatDataForFields } from '../../../utils'
-import { Container } from '../../../../layoutStyles'
+import { Container } from '../../common/Containers'
 import { BackHistoryButton } from '../../common/table'
+import { useProfessions, useQualities, useUsers } from '../../../hooks'
 
 const EditUserPage = ({ userId }) => {
+  const history = useHistory()
   const [data, setData] = useState({
     name: '',
     email: '',
@@ -20,31 +21,33 @@ const EditUserPage = ({ userId }) => {
     profession: '',
     qualities: ''
   })
-
-  const [professions, setProfessions] = useState([])
-  const [qualities, setQualities] = useState({})
   const [isLoading, setIsLoading] = useState(true)
-  const history = useHistory()
+  const [error, setError] = useState(null)
+
+  const { professions } = useProfessions()
+  const { qualities } = useQualities()
+  const { getUserById } = useUsers()
+  const { updateUser } = useUsers()
 
   useEffect(() => {
-    API.users.getById(userId).then(({ profession, qualities, ...data }) =>
-      setData((prevState) => ({
-        ...prevState,
-        ...data,
-        qualities: formatDataForFields(qualities),
-        profession: profession._id
-      }))
-    )
-    API.professions.fetchAll().then((data) => setProfessions(data))
-    API.qualities
-      .fetchAll()
-      .then((data) => setQualities(data))
-      .then(() => setIsLoading(false))
+    setData((prevState) => ({
+      ...prevState,
+      ...getUserById(userId)
+    }))
   }, [])
 
   useEffect(() => {
-    if (data._id && Object.keys(professions).length) setIsLoading(false)
+    if (data._id && Object.keys(professions).length) {
+      setIsLoading(false)
+    }
   }, [data, professions])
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+      setError(null)
+    }
+  }, [error])
 
   const handleChange = ({ target }) => {
     setData((state) => ({
@@ -56,27 +59,25 @@ const EditUserPage = ({ userId }) => {
   const getQualities = (elements) => {
     return elements.reduce((acc, elem) => {
       Object.values(qualities).forEach((qualitie) => {
-        if (elem.value === qualitie._id) acc.push(qualitie)
+        if (elem === qualitie._id) {
+          acc.push({ label: qualitie.name, value: qualitie._id })
+        }
       })
       return acc
     }, [])
   }
 
-  const getProfession = (id) => {
-    return Object.values(professions).find(
-      (profession) => profession._id === id
-    )
-  }
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    API.users
-      .update(userId, {
+    try {
+      await updateUser({
         ...data,
-        profession: getProfession(data.profession),
-        qualities: getQualities(data.qualities)
+        qualities: data.qualities.map((q) => q.value)
       })
-      .then(() => history.push('/users/' + userId))
+      history.push('/users/' + userId)
+    } catch (error) {
+      setError(error)
+    }
   }
 
   return (
@@ -122,7 +123,7 @@ const EditUserPage = ({ userId }) => {
               name='qualities'
               options={qualities}
               onChange={handleChange}
-              defaultValue={data.qualities}
+              defaultValue={getQualities(data.qualities)}
             />
             <button
               type='submit'
