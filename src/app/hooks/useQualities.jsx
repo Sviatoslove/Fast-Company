@@ -28,10 +28,11 @@ const QualitiesProvider = ({ children }) => {
     try {
       const { content } = await qualitiesService.get()
       setQualities(content)
-      setIsLoading(false)
       return content
     } catch (error) {
       errorCatcher(error, setError)
+    } finally {
+      setIsLoading(false)
     }
   }
 

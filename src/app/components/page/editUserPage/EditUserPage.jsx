@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import {
   MultiSelectField,
@@ -10,9 +10,10 @@ import {
 } from '../../common/form'
 import { Container } from '../../common/Containers'
 import { BackHistoryButton } from '../../common/table'
-import { useProfessions, useQualities, useUsers } from '../../../hooks'
+import { useAuth, useProfessions, useQualities, useUsers } from '../../../hooks'
 
-const EditUserPage = ({ userId }) => {
+const EditUserPage = () => {
+  const { userId } = useParams()
   const history = useHistory()
   const [data, setData] = useState({
     name: '',
@@ -27,14 +28,14 @@ const EditUserPage = ({ userId }) => {
   const { professions } = useProfessions()
   const { qualities } = useQualities()
   const { getUserById } = useUsers()
-  const { updateUser } = useUsers()
+  const { updateUser } = useAuth()
 
   useEffect(() => {
     setData((prevState) => ({
       ...prevState,
       ...getUserById(userId)
     }))
-  }, [])
+  }, [qualities])
 
   useEffect(() => {
     if (data._id && Object.keys(professions).length) {
@@ -70,10 +71,11 @@ const EditUserPage = ({ userId }) => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      await updateUser({
+      const user = {
         ...data,
         qualities: data.qualities.map((q) => q.value)
-      })
+      }
+      await updateUser(user)
       history.push('/users/' + userId)
     } catch (error) {
       setError(error)
@@ -142,7 +144,7 @@ const EditUserPage = ({ userId }) => {
 }
 
 EditUserPage.propTypes = {
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string
 }
 
 export default EditUserPage

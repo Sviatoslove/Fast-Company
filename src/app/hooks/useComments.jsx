@@ -18,10 +18,10 @@ const CommentsProvider = ({ children }) => {
   const [comments, setComments] = useState()
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
-    setComments(null)
-    setIsLoading(false)
-  }, [])
+    getComments()
+  }, [userId])
 
   useEffect(() => {
     if (error) {
@@ -40,14 +40,42 @@ const CommentsProvider = ({ children }) => {
     }
     try {
       const { content } = await commentService.createComment(comment)
-      console.log('content:', content)
+      setComments((prevState) => [...prevState, content])
+    } catch (error) {
+      errorCatcher(error, setError)
+    }
+  }
+
+  const getComments = async () => {
+    try {
+      const { content } = await commentService.getComments(userId)
+      setComments(content)
+      return content
+    } catch (error) {
+      errorCatcher(error, setError)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const deleteComment = async (id) => {
+    try {
+      const { content } = await commentService.deleteComment(id)
+      if (content === null) {
+        setComments((prevState) =>
+          prevState.filter((comment) => comment._id !== id)
+        )
+      }
+      return content
     } catch (error) {
       errorCatcher(error, setError)
     }
   }
 
   return (
-    <CommentsContext.Provider value={{ comments, createComment, isLoading }}>
+    <CommentsContext.Provider
+      value={{ comments, createComment, isLoading, deleteComment }}
+    >
       {children}
     </CommentsContext.Provider>
   )

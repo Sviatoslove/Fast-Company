@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import UserAvatar from '../UserAvatar'
 import { displayDate } from '../../../utils'
-import { useUsers } from '../../../hooks'
+import { useAuth, useUsers } from '../../../hooks'
 
 const Comment = ({
   _id: id,
@@ -11,6 +11,8 @@ const Comment = ({
   created_at: created,
   onRemove
 }) => {
+  const { currentUser } = useAuth()
+  const deleteComment = currentUser._id === userId
   const { isLoading, getUserById } = useUsers()
   const user = getUserById(userId)
 
@@ -30,12 +32,14 @@ const Comment = ({
                       {user && user.name}
                       <span className='small ms-5'>{displayDate(created)}</span>
                     </p>
-                    <button
-                      className='btn btn-sm text-primary d-flex align-items-center'
-                      onClick={() => onRemove(id)}
-                    >
-                      <i className='bi bi-x-lg'></i>
-                    </button>
+                    {deleteComment && (
+                      <button
+                        className='btn btn-sm text-primary d-flex align-items-center'
+                        onClick={() => onRemove(id)}
+                      >
+                        <i className='bi bi-x-lg'></i>
+                      </button>
+                    )}
                   </div>
                   <p className='small mb-0'>{content}</p>
                 </div>
