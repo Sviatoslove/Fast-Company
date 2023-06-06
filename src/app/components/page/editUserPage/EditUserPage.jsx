@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { useHistory } from 'react-router-dom'
 import {
   MultiSelectField,
   RadioField,
@@ -10,31 +9,21 @@ import {
 } from '../../common/form'
 import { Container } from '../../common/Containers'
 import { BackHistoryButton } from '../../common/table'
-import { useAuth, useProfessions, useQualities, useUsers } from '../../../hooks'
+import { useAuth, useProfessions, useQualities } from '../../../hooks'
+import { validator, validatorConfig } from '../../../utils'
 
 const EditUserPage = () => {
-  const { userId } = useParams()
   const history = useHistory()
-  const [data, setData] = useState({
-    name: '',
-    email: '',
-    sex: '',
-    profession: '',
-    qualities: ''
-  })
+  const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState({})
 
   const { professions } = useProfessions()
   const { qualities } = useQualities()
-  const { getUserById } = useUsers()
-  const { updateUser } = useAuth()
+  const { currentUser, updateUser } = useAuth()
 
   useEffect(() => {
-    setData((prevState) => ({
-      ...prevState,
-      ...getUserById(userId)
-    }))
+    setData(currentUser)
   }, [qualities])
 
   useEffect(() => {
@@ -43,12 +32,15 @@ const EditUserPage = () => {
     }
   }, [data, professions])
 
+  const validate = () => {
+    const errors = validator(data, validatorConfig)
+    setError(errors)
+    return !!Object.keys(errors).length
+  }
+
   useEffect(() => {
-    if (error) {
-      toast.error(error)
-      setError(null)
-    }
-  }, [error])
+    validate()
+  }, [data])
 
   const handleChange = ({ target }) => {
     setData((state) => ({
@@ -68,15 +60,20 @@ const EditUserPage = () => {
     }, [])
   }
 
+  const isValid = !!Object.keys(error).length
+
   const handleSubmit = async (event) => {
     event.preventDefault()
+    const isVal = validate()
+    if (isVal) return
+
     try {
       const user = {
         ...data,
-        qualities: data.qualities.map((q) => q.value)
+        qualities: data.qualities.map((q) => (q.value ? q.value : q))
       }
       await updateUser(user)
-      history.push('/users/' + userId)
+      history.push(`/users/${currentUser._id}`)
     } catch (error) {
       setError(error)
     }
@@ -95,6 +92,7 @@ const EditUserPage = () => {
               value={data.name}
               name='name'
               onChange={handleChange}
+              error={error.name}
             />
             <TextField
               label='Электронная почта'
@@ -102,6 +100,7 @@ const EditUserPage = () => {
               name='email'
               type='email'
               onChange={handleChange}
+              error={error.email}
             />
             <SelectedField
               label='Выбери свою профессию:'
@@ -109,6 +108,7 @@ const EditUserPage = () => {
               name='profession'
               onChange={handleChange}
               value={data.profession}
+              error={error.professions}
             />
             <RadioField
               options={[
@@ -126,10 +126,12 @@ const EditUserPage = () => {
               options={qualities}
               onChange={handleChange}
               defaultValue={getQualities(data.qualities)}
+              error={error.qualities}
             />
             <button
               type='submit'
               className='btn btn-primary w-100 mx-auto mb-3'
+              disabled={isValid}
             >
               Обновить
             </button>

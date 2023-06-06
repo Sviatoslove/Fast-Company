@@ -1,17 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { validator, validatorConfig } from '../../utils'
+import { validator } from '../../utils'
 import { TextField, CheckboxField } from '../common/form'
 import { useAuth } from '../../hooks'
 
 const LoginForm = () => {
   const [data, setData] = useState({ email: '', password: '', stayOn: false })
   const [errors, setErrors] = useState({})
+  const [enterError, setEnterError] = useState(null)
   const history = useHistory()
   const { logIn } = useAuth()
 
   const handleChange = ({ target }) => {
     setData((state) => ({ ...state, [target.name]: target.value }))
+    setEnterError(null)
+  }
+
+  const validatorConfig = {
+    email: {
+      isRequired: {
+        messege: 'Поле электронная почта обязательно для заполнения'
+      }
+    },
+    password: {
+      isRequired: {
+        messege: 'Поле пароль обязательно для заполнения'
+      }
+    }
   }
 
   const validate = () => {
@@ -33,11 +48,9 @@ const LoginForm = () => {
 
     try {
       await logIn(data)
-      history.push(
-        history.location.state ? history.location.state.from.pathname : '/'
-      )
+      history.push('/')
     } catch (error) {
-      setErrors(error)
+      setEnterError(error.message)
     }
   }
 
@@ -66,9 +79,10 @@ const LoginForm = () => {
       >
         Оставаться в системе
       </CheckboxField>
+      {enterError && <p className='text-danger'>{enterError}</p>}
       <button
         type='submit'
-        disabled={isValid}
+        disabled={isValid || enterError}
         className='btn btn-primary w-100 mx-auto'
       >
         Войти

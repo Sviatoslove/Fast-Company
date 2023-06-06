@@ -4,10 +4,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { usersService, setTokens, localStorageService } from '../services'
 import { errorCatcher, randomInt } from '../utils'
-import configFile from '../config.json'
 import { useHistory } from 'react-router-dom'
-
-const { urlSignUp, urlLogIn } = configFile
 
 export const httpAuth = axios.create({
   baseURL: 'https://identitytoolkit.googleapis.com/v1/',
@@ -45,7 +42,7 @@ const AuthProvider = ({ children }) => {
 
   const signUp = async ({ email, password, ...rest }) => {
     try {
-      const { data } = await httpAuth.post(urlSignUp, {
+      const { data } = await httpAuth.post('accounts:signUp', {
         email,
         password,
         returnSecureToken: true
@@ -74,24 +71,25 @@ const AuthProvider = ({ children }) => {
     }
   }
 
-  const logIn = async ({ email, password, ...rest }) => {
+  const logIn = async ({ email, password }) => {
     try {
-      const { data } = await httpAuth.post(urlLogIn, {
+      const { data } = await httpAuth.post('accounts:signInWithPassword', {
         email,
         password,
         returnSecureToken: true
       })
 
-      setTokens({ ...data, ...rest })
+      setTokens({ ...data })
       await getUserData()
     } catch (error) {
       const { code, message } = error.response.data.error
       if (code === 400) {
-        if (message === 'EMAIL_NOT_FOUND') {
-          const errorObject = {
-            email: 'Пользователь с таким Email не зарегистрирован'
-          }
-          throw errorObject
+        if (message === 'INVALID_PASSWORD' || message === 'INVALID_EMAIL') {
+          throw new Error('Email или пароль введены не корректно')
+        } else if (message.includes('TOO_MANY_ATTEMPTS_TRY_LATER')) {
+          throw new Error('Слишком много попыток входа. Попробуйте позже.')
+        } else if (message === 'EMAIL_NOT_FOUND') {
+          throw new Error('Пользователь с таким Email не существует')
         }
       }
     }
@@ -112,6 +110,7 @@ const AuthProvider = ({ children }) => {
   const updateUser = async (data) => {
     try {
       const { content } = await usersService.update(data)
+      setCurrentUser(content)
       return content
     } catch (error) {
       errorCatcher(error, setError)
