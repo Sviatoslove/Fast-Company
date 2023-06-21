@@ -9,8 +9,13 @@ import {
 } from '../../common/form'
 import { Container } from '../../common/Containers'
 import { BackHistoryButton } from '../../common/table'
-import { useAuth, useProfessions, useQualities } from '../../../hooks'
+import { useAuth, useProfessions } from '../../../hooks'
 import { validator, validatorConfig } from '../../../utils'
+import { useSelector } from 'react-redux'
+import {
+  getQualities,
+  getQualitiesLoadingStatus
+} from '../../../store/qualities'
 
 const EditUserPage = () => {
   const history = useHistory()
@@ -19,11 +24,15 @@ const EditUserPage = () => {
   const [error, setError] = useState({})
 
   const { professions } = useProfessions()
-  const { qualities } = useQualities()
+  const qualities = useSelector(getQualities())
+  const qualitiesIsLoadingStatus = useSelector(getQualitiesLoadingStatus())
+
   const { currentUser, updateUser } = useAuth()
 
   useEffect(() => {
-    setData(currentUser)
+    if (!qualitiesIsLoadingStatus) {
+      setData(currentUser)
+    }
   }, [qualities])
 
   useEffect(() => {
@@ -49,7 +58,7 @@ const EditUserPage = () => {
     }))
   }
 
-  const getQualities = (elements) => {
+  const transformQualities = (elements) => {
     return elements.reduce((acc, elem) => {
       Object.values(qualities).forEach((qualitie) => {
         if (elem === qualitie._id) {
@@ -125,7 +134,7 @@ const EditUserPage = () => {
               name='qualities'
               options={qualities}
               onChange={handleChange}
-              defaultValue={getQualities(data.qualities)}
+              defaultValue={transformQualities(data.qualities)}
               error={error.qualities}
             />
             <button

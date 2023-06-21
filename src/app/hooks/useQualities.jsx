@@ -26,7 +26,7 @@ const QualitiesProvider = ({ children }) => {
 
   const getQualitiesList = async () => {
     try {
-      const { content } = await qualitiesService.get()
+      const { content } = await qualitiesService.fetchAll()
       setQualities(content)
       return content
     } catch (error) {

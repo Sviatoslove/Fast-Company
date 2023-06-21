@@ -1,16 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import NavBar from './components/ui/NavBar'
-import Login from './layouts/Login'
-import Main from './layouts/Main'
-import Users from './layouts/Users'
+import { useDispatch } from 'react-redux'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import NavBar from './components/ui/NavBar'
 import { AuthProvider, ProfessionsProvider, QualitiesProvider } from './hooks'
 import ProtectedRoute from './components/common/ProtectedRoute'
 import Logout from './layouts/Logout'
+import Users from './layouts/Users'
+import Login from './layouts/Login'
+import Main from './layouts/Main'
+import { loadQualitiesList } from './store/qualities'
 
 const App = () => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(loadQualitiesList())
+  }, [])
   return (
     <div className='position-relative z-0'>
       <AuthProvider>

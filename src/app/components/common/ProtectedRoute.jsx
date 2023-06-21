@@ -11,7 +11,6 @@ const ProtectedRoute = ({ component: Component, children, ...rest }) => {
       {...rest}
       render={(props) => {
         if (!currentUser || (userId && userId !== currentUser._id)) {
-          console.log(1)
           return (
             <Redirect
               to={{

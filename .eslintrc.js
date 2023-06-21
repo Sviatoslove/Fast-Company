@@ -29,5 +29,6 @@ module.exports = {
     'spaced-comment': 'off',
     'react/jsx-no-comment-textnodes': 'off',
     'no-trailing-spaces': ['error', { skipBlankLines: true }]
-  }
+  },
+  ignorePatterns: ['node_modules/*']
 }
