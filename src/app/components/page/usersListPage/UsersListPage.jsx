@@ -6,12 +6,20 @@ import SearchStatus from '../../ui/SearchStatus'
 import UsersTable from '../../ui/UsersTable'
 import _ from 'lodash'
 import { SearchInput } from '../../common/form'
-import { useUsers, useProfessions, useAuth } from '../../../hooks'
+import { useUsers, useAuth } from '../../../hooks'
+import { useSelector } from 'react-redux'
+import {
+  selectGetProfessions,
+  selectGetProfessionsLoadingStatus
+} from '../../../store/professions'
 
 const UsersList = () => {
   const { users } = useUsers()
   const { currentUser } = useAuth()
-  const { isLoading: professionsLoading, professions } = useProfessions()
+  const professions = useSelector(selectGetProfessions())
+  const professionsIsLoadingStatus = useSelector(
+    selectGetProfessionsLoadingStatus()
+  )
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedProf, setSelectedProf] = useState()
   const [searchQuery, setSearchQuery] = useState('')
@@ -83,7 +91,7 @@ const UsersList = () => {
   return (
     <div className='d-flex px-4 p-3 shadow-custom mt-5 mx-auto w-90vw br-10 bc-white'>
       <div className='d-flex flex-column flex-shrink=0 pe-3 w-10vw'>
-        {!professionsLoading && (
+        {!professionsIsLoadingStatus && (
           <>
             <GroupList
               selectedItem={selectedProf}

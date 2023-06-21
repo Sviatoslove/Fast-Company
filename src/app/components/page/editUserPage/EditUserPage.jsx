@@ -9,13 +9,17 @@ import {
 } from '../../common/form'
 import { Container } from '../../common/Containers'
 import { BackHistoryButton } from '../../common/table'
-import { useAuth, useProfessions } from '../../../hooks'
+import { useAuth } from '../../../hooks'
 import { validator, validatorConfig } from '../../../utils'
 import { useSelector } from 'react-redux'
 import {
-  getQualities,
-  getQualitiesLoadingStatus
+  selectGetQualities,
+  selectGetQualitiesLoadingStatus
 } from '../../../store/qualities'
+import {
+  selectGetProfessions,
+  selectGetProfessionsLoadingStatus
+} from '../../../store/professions'
 
 const EditUserPage = () => {
   const history = useHistory()
@@ -23,23 +27,28 @@ const EditUserPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState({})
 
-  const { professions } = useProfessions()
-  const qualities = useSelector(getQualities())
-  const qualitiesIsLoadingStatus = useSelector(getQualitiesLoadingStatus())
+  const professions = useSelector(selectGetProfessions())
+  const professionsIsLoadingStatus = useSelector(
+    selectGetProfessionsLoadingStatus()
+  )
+  const qualities = useSelector(selectGetQualities())
+  const qualitiesIsLoadingStatus = useSelector(
+    selectGetQualitiesLoadingStatus()
+  )
 
   const { currentUser, updateUser } = useAuth()
 
   useEffect(() => {
-    if (!qualitiesIsLoadingStatus) {
+    if (!qualitiesIsLoadingStatus && !professionsIsLoadingStatus) {
       setData(currentUser)
     }
-  }, [qualities])
+  }, [qualities, professions])
 
   useEffect(() => {
-    if (data._id && Object.keys(professions).length) {
+    if (data._id) {
       setIsLoading(false)
     }
-  }, [data, professions])
+  }, [data])
 
   const validate = () => {
     const errors = validator(data, validatorConfig)

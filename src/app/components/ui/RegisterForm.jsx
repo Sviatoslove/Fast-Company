@@ -8,9 +8,10 @@ import {
   SelectedField,
   TextField
 } from '../common/form'
-import { useProfessions, useAuth } from '../../hooks'
+import { useAuth } from '../../hooks'
 import { useSelector } from 'react-redux'
-import { getQualities } from '../../store/qualities'
+import { selectGetQualities } from '../../store/qualities'
+import { selectGetProfessions } from '../../store/professions'
 
 const RegisterForm = () => {
   const history = useHistory()
@@ -23,8 +24,8 @@ const RegisterForm = () => {
     qualities: [],
     license: false
   })
-  const { professions } = useProfessions()
-  const qualities = useSelector(getQualities())
+  const professions = useSelector(selectGetProfessions())
+  const qualities = useSelector(selectGetQualities())
   const [errors, setErrors] = useState({})
 
   const { signUp } = useAuth()

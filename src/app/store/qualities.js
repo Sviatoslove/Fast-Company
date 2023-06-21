@@ -1,15 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { qualitiesService } from '../services'
+import { isOutdated } from '../utils/isOutdated'
 
 const qualitiesSlice = createSlice({
   name: 'qualities',
-  initialState: { entities: null, isLoading: true, error: null },
+  initialState: {
+    entities: null,
+    isLoading: true,
+    error: null,
+    lastFetch: null
+  },
   reducers: {
     qualitiesRequested: (state) => {
       state.isLoading = true
     },
     qualitiesReceved: (state, action) => {
       state.entities = action.payload
+      state.lastFetch = Date.now()
       state.isLoading = false
     },
     qualitiesRequestFailed: (state, action) => {
@@ -22,26 +29,30 @@ const qualitiesSlice = createSlice({
 const { actions, reducer: qualitiesReducer } = qualitiesSlice
 const { qualitiesRequested, qualitiesReceved, qualitiesRequestFailed } = actions
 
-export const loadQualitiesList = () => async (dispatch) => {
-  dispatch(qualitiesRequested())
-  try {
-    const { content } = await qualitiesService.fetchAll()
-    dispatch(qualitiesReceved(content))
-    return content
-  } catch (error) {
-    dispatch(qualitiesRequestFailed(error.message))
+export const loadQualitiesList = () => async (dispatch, getState) => {
+  const { lastFetch } = getState().qualities
+  if (isOutdated(lastFetch)) {
+    dispatch(qualitiesRequested())
+    try {
+      const { content } = await qualitiesService.fetchAll()
+      dispatch(qualitiesReceved(content))
+      return content
+    } catch (error) {
+      dispatch(qualitiesRequestFailed(error.message))
+    }
   }
 }
 
-export const getQualities = () => (state) => state.qualities.entities
+export const selectGetQualities = () => (state) => state.qualities.entities
 
-export const getQualitiesLoadingStatus = () => (state) =>
+export const selectGetQualitiesLoadingStatus = () => (state) =>
   state.qualities.isLoading
 
-export const getQualitiesByIds = (qualitiesIds) => (state) => {
-  return qualitiesIds.map((qualiId) =>
-    state.qualities.entities.find((qual) => qual._id === qualiId)
+export const getQualitiesByIds = (qualitiesIds) =>
+  createSelector(
+    (state) => state.qualities.entities,
+    (state) =>
+      qualitiesIds.map((qualiId) => state.find((qual) => qual._id === qualiId))
   )
-}
 
 export default qualitiesReducer
