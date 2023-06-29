@@ -63,10 +63,6 @@ const usersSlice = createSlice({
         ...state.entities.filter((u) => u._id !== action.payload._id),
         action.payload
       ]
-    },
-    userUpdatedFailed: (state, action) => {
-      state.error = action.payload
-      state.isLoading = false
     }
   }
 })
@@ -88,6 +84,7 @@ const authRequested = createAction('auth/authRequested')
 const userCreateRequested = createAction('users/userCreateRequested')
 const userCreatedFailed = createAction('users/userCreatedFailed') //эта ошибка только наша, и нужна нам для отладки
 const userUpdateRequested = createAction('users/userUpdateRequested')
+const userUpdatedFailed = createAction('users/userUpdatedFailed')
 
 const createUser = (payload) => async (dispatch) => {
   dispatch(userCreateRequested())
@@ -157,7 +154,7 @@ export const userUpdated = (payload) => async (dispatch) => {
     history.push(`/users/${payload._id}`)
     return content
   } catch (error) {
-    dispatch(userCreatedFailed())
+    dispatch(userUpdatedFailed(error.message))
   }
 }
 
