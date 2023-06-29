@@ -3,13 +3,14 @@ import PropTypes from 'prop-types'
 import QualitiesList from '../../ui/qualities/QualitiesList'
 import { Container, LeftColumn, RightColumn } from '../../common/Containers'
 import { Comments, MeetingsCard, QualitiesCard, UserCard } from '../../ui'
-import { useUsers } from '../../../hooks'
 import { CommentsProvider } from '../../../hooks/useComments'
+import { selectUserById, selectUsersLoadingStatus } from '../../../store/users'
+import { useSelector } from 'react-redux'
 
 const UserPage = ({ userId }) => {
-  const { getUserById, isLoading } = useUsers()
-  const user = getUserById(userId)
+  const isLoading = useSelector(selectUsersLoadingStatus())
   if (isLoading) return 'Loading...'
+  const user = useSelector(selectUserById(userId))
   return (
     <Container classContainer='p-3 mt-5'>
       <LeftColumn>

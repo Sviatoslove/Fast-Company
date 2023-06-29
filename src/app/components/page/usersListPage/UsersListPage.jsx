@@ -6,16 +6,20 @@ import SearchStatus from '../../ui/SearchStatus'
 import UsersTable from '../../ui/UsersTable'
 import _ from 'lodash'
 import { SearchInput } from '../../common/form'
-import { useUsers, useAuth } from '../../../hooks'
 import { useSelector } from 'react-redux'
 import {
   selectGetProfessions,
   selectGetProfessionsLoadingStatus
 } from '../../../store/professions'
+import {
+  selectUserId,
+  selectUsersLoadingStatus,
+  selectUsersList
+} from '../../../store/users'
 
 const UsersList = () => {
-  const { users } = useUsers()
-  const { currentUser } = useAuth()
+  const usersLoadingStatus = useSelector(selectUsersLoadingStatus())
+  const currentUserId = useSelector(selectUserId())
   const professions = useSelector(selectGetProfessions())
   const professionsIsLoadingStatus = useSelector(
     selectGetProfessionsLoadingStatus()
@@ -36,7 +40,6 @@ const UsersList = () => {
           }
         : user
     )
-    //setUsers(currentUsers)
     console.log('currentUsers:', currentUsers)
   }
 
@@ -77,8 +80,12 @@ const UsersList = () => {
           objectsEqual(user.profession, selectedProf._id) ? user.profession : ''
         )
       : data
-    return filteredUsers.filter((u) => u._id !== currentUser._id)
+    return filteredUsers.filter((u) => u._id !== currentUserId)
   }
+
+  if (usersLoadingStatus) return <h1>Loading...</h1>
+
+  const users = useSelector(selectUsersList())
 
   const filteredUsers = filterUsers(users)
 

@@ -81,6 +81,7 @@ const AuthProvider = ({ children }) => {
 
       setTokens({ ...data })
       await getUserData()
+      return data
     } catch (error) {
       const { code, message } = error.response.data.error
       if (code === 400) {

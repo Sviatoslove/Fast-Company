@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { validator, validatorConfig } from '../../utils'
 import {
   CheckboxField,
@@ -8,13 +7,13 @@ import {
   SelectedField,
   TextField
 } from '../common/form'
-import { useAuth } from '../../hooks'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectGetQualities } from '../../store/qualities'
 import { selectGetProfessions } from '../../store/professions'
+import { signUp } from '../../store/users'
 
 const RegisterForm = () => {
-  const history = useHistory()
+  const dispatch = useDispatch()
   const [data, setData] = useState({
     email: '',
     name: '',
@@ -27,8 +26,6 @@ const RegisterForm = () => {
   const professions = useSelector(selectGetProfessions())
   const qualities = useSelector(selectGetQualities())
   const [errors, setErrors] = useState({})
-
-  const { signUp } = useAuth()
 
   const handleChange = ({ target }) => {
     setData((state) => ({ ...state, [target.name]: target.value }))
@@ -46,18 +43,13 @@ const RegisterForm = () => {
 
   const isValid = !!Object.keys(errors).length
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
     const isVal = validate()
     if (isVal) return
 
     const newData = { ...data, qualities: data.qualities.map((q) => q.value) }
-    try {
-      await signUp(newData)
-      history.push('/')
-    } catch (error) {
-      setErrors(error)
-    }
+    dispatch(signUp(newData))
   }
 
   return (

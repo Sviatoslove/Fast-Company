@@ -2,13 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import UserAvatar from '../common/UserAvatar'
-import { useAuth } from '../../hooks'
 import { objectsEqual } from '../../utils'
+import { useSelector } from 'react-redux'
+import { selectUserId } from '../../store/users'
 
 const UserCard = ({ user }) => {
   const history = useHistory()
-  const { currentUser } = useAuth()
-  const editUser = objectsEqual(user._id, currentUser._id)
+  const currentUserId = useSelector(selectUserId())
+
+  const editUser = objectsEqual(user._id, currentUserId)
 
   const handleToEdit = () => {
     history.push(history.location.pathname + '/edit')

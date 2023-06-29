@@ -1,0 +1,33 @@
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  loadUsersList,
+  selectIsLoggedIn,
+  selectUsersLoadingStatus
+} from '../../../store/users'
+import { loadQualitiesList } from '../../../store/qualities'
+import { loadProfessionsList } from '../../../store/professions'
+
+const AppLoader = ({ children }) => {
+  const dispatch = useDispatch()
+  const isLoggedIn = useSelector(selectIsLoggedIn())
+  const usersLoadingStatus = useSelector(selectUsersLoadingStatus())
+  useEffect(() => {
+    dispatch(loadQualitiesList())
+    dispatch(loadProfessionsList())
+    if (isLoggedIn) dispatch(loadUsersList())
+  }, [])
+
+  if (usersLoadingStatus) return <h2>Loading...</h2>
+  return children
+}
+
+AppLoader.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+}
+
+export default AppLoader

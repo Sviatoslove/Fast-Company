@@ -5,6 +5,7 @@ import getInputClasses from './getInputClasses'
 import formatDataForFields from './formatDataForFields'
 import displayDate from './displayDate'
 import errorCatcher from './errorCatcher'
+import history from './history'
 
 export {
   formatDataForFields,
@@ -15,5 +16,6 @@ export {
   validatorConfig,
   displayDate,
   errorCatcher,
-  randomInt
+  randomInt,
+  history
 }

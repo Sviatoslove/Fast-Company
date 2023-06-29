@@ -1,10 +1,21 @@
-import React, { useState } from 'react'
-import { useAuth } from '../../hooks/useAuth'
+import React, { useEffect, useState } from 'react'
 import UserAvatar from '../common/UserAvatar'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  loadUsersList,
+  selectCurrentUser,
+  selectDataStatus
+} from '../../store/users'
 
 const NavProfile = () => {
-  const { currentUser } = useAuth()
+  const dataStatus = useSelector(selectDataStatus())
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (!dataStatus) dispatch(loadUsersList())
+  }, [])
+  if (!dataStatus) return 'Loading...'
+  const currentUser = useSelector(selectCurrentUser())
   const [isOpen, setOpen] = useState(false)
   const toggleMenu = () => {
     setOpen((prevState) => !prevState)
