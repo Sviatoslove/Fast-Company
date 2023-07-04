@@ -20,14 +20,15 @@ const CommentsProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    getComments()
-  }, [userId])
+  //useEffect(() => {
+  //  getComments()
+  //}, [userId])
 
   useEffect(() => {
     if (error) {
       toast.error(error)
       setError(null)
+      setIsLoading(null)
     }
   }, [error])
 
@@ -47,17 +48,17 @@ const CommentsProvider = ({ children }) => {
     }
   }
 
-  const getComments = async () => {
-    try {
-      const { content } = await commentService.getComments(userId)
-      setComments(content)
-      return content
-    } catch (error) {
-      errorCatcher(error, setError)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  //const getComments = async () => {
+  //  try {
+  //    const { content } = await commentService.getComments(userId)
+  //    setComments(content)
+  //    return content
+  //  } catch (error) {
+  //    errorCatcher(error, setError)
+  //  } finally {
+  //    setIsLoading(false)
+  //  }
+  //}
 
   const deleteComment = async (id) => {
     try {

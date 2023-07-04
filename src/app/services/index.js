@@ -8,6 +8,7 @@ import localStorageService, {
 import professionsService from './professions.service'
 import qualitiesService from './qualities.service'
 import usersService from './users.service'
+import commentService from './comment.service'
 
 export {
   httpService,
@@ -18,5 +19,6 @@ export {
   getRefreshToken,
   professionsService,
   qualitiesService,
-  usersService
+  usersService,
+  commentService
 }

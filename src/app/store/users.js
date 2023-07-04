@@ -2,6 +2,7 @@ import { createAction, createSlice } from '@reduxjs/toolkit'
 import { localStorageService, usersService } from '../services'
 import authService from '../services/auth.service'
 import { history, randomInt } from '../utils'
+import { generateAuthError } from '../utils/generateAuthError'
 
 const initialState = localStorageService.getAccessToken()
   ? {
@@ -37,6 +38,9 @@ const usersSlice = createSlice({
       state.error = action.payload
       state.isLoading = false
     },
+    authRequested: (state) => {
+      state.error = null
+    },
     authRequestedSucess: (state, action) => {
       state.auth = action.payload
       state.isLoggedIn = true
@@ -49,9 +53,6 @@ const usersSlice = createSlice({
       if (!state.entities) state.entities = []
       state.entities.push(action.payload)
     },
-    //authRequested: (state) => {
-    //  state.isLoading = true
-    //},
     userLoggedOut: (state) => {
       state.entities = null
       state.isLoggedIn = false
@@ -77,10 +78,10 @@ const {
   authRequestedFailed,
   userCreatedSucess,
   userLoggedOut,
-  userUpdatedSucess
+  userUpdatedSucess,
+  authRequested
 } = actions
 
-const authRequested = createAction('auth/authRequested')
 const userCreateRequested = createAction('users/userCreateRequested')
 const userCreatedFailed = createAction('users/userCreatedFailed') //эта ошибка только наша, и нужна нам для отладки
 const userUpdateRequested = createAction('users/userUpdateRequested')
@@ -136,7 +137,11 @@ export const logIn =
       localStorageService.setTokens(data)
       history.push(redirect)
     } catch (error) {
-      dispatch(authRequestedFailed(error.message))
+      const { code, message } = error.response.data.error
+      if (code === 400) {
+        const errorMessage = generateAuthError(message)
+        dispatch(authRequestedFailed(errorMessage))
+      }
     }
   }
 
@@ -154,7 +159,10 @@ export const userUpdated = (payload) => async (dispatch) => {
     history.push(`/users/${payload._id}`)
     return content
   } catch (error) {
-    dispatch(userUpdatedFailed(error.message))
+    const { code, message } = error.response.data.error
+    if (code === 400) {
+      dispatch(userUpdatedFailed(message))
+    }
   }
 }
 
@@ -172,6 +180,7 @@ export const loadUsersList = () => async (dispatch) => {
 export const selectIsLoggedIn = () => (state) => state.users.isLoggedIn
 export const selectDataStatus = () => (state) => state.users.dataLoaded
 export const selectUsersLoadingStatus = () => (state) => state.users.isLoading
+export const selectAuthError = () => (state) => state.users.error
 
 export const selectUsersList = () => (state) => state.users.entities
 export const selectUserId = () => (state) => state.users.auth.userId

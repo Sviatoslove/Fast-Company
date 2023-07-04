@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { history, validator } from '../../utils'
 import { TextField, CheckboxField } from '../common/form'
-import { logIn } from '../../store/users'
+import { logIn, selectAuthError } from '../../store/users'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
   const [data, setData] = useState({ email: '', password: '', stayOn: false })
   const [errors, setErrors] = useState({})
+  const loginError = useSelector(selectAuthError())
   const [enterError, setEnterError] = useState(null)
 
   const handleChange = ({ target }) => {
     setData((state) => ({ ...state, [target.name]: target.value }))
     setEnterError(null)
   }
+
+  useEffect(() => {
+    setEnterError(loginError)
+  }, [loginError])
 
   const validatorConfig = {
     email: {
@@ -40,7 +45,7 @@ const LoginForm = () => {
 
   const isValid = !!Object.keys(errors).length
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
     const isVal = validate()
     if (isVal) return
