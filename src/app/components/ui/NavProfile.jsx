@@ -9,8 +9,8 @@ import {
 } from '../../store/users'
 
 const NavProfile = () => {
-  const dataStatus = useSelector(selectDataStatus())
   const dispatch = useDispatch()
+  const dataStatus = useSelector(selectDataStatus())
   useEffect(() => {
     if (!dataStatus) dispatch(loadUsersList())
   }, [])

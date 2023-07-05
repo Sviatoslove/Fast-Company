@@ -17,7 +17,7 @@ const usersService = {
     return data
   },
   update: async (user) => {
-    const { data } = await httpService.patch(usersEndpoint + getUserId(), user)
+    const { data } = await httpService.patch(usersEndpoint + user._id, user)
     return data
   }
 }

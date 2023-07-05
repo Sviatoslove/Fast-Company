@@ -43,16 +43,16 @@ export const loadQualitiesList = () => async (dispatch, getState) => {
   }
 }
 
-export const selectGetQualities = () => (state) => state.qualities.entities
+export const selectQualities = () => (state) => state.qualities.entities
 
-export const selectGetQualitiesLoadingStatus = () => (state) =>
+export const selectQualitiesLoadingStatus = () => (state) =>
   state.qualities.isLoading
 
-export const getQualitiesByIds = (qualitiesIds) =>
+export const selectQualitiesByIds = (qualitiesIds) =>
   createSelector(
     (state) => state.qualities.entities,
     (state) =>
-      qualitiesIds.map((qualiId) => state.find((qual) => qual._id === qualiId))
+      qualitiesIds.map((qualiId) => state?.find((qual) => qual._id === qualiId))
   )
 
 export default qualitiesReducer

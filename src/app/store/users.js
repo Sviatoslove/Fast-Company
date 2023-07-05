@@ -60,10 +60,13 @@ const usersSlice = createSlice({
       state.dataLoaded = false
     },
     userUpdatedSucess: (state, action) => {
-      state.entities = [
-        ...state.entities.filter((u) => u._id !== action.payload._id),
-        action.payload
-      ]
+      const userIdx = state.entities.findIndex(
+        (u) => u._id === action.payload._id
+      )
+      state.entities[userIdx] = {
+        ...state.entities[userIdx],
+        ...action.payload
+      }
     }
   }
 })
@@ -122,7 +125,11 @@ export const signUp =
         })
       )
     } catch (error) {
-      dispatch(authRequestedFailed(error.message))
+      const { code, message } = error.response.data.error
+      if (code === 400) {
+        const errorMessage = generateAuthError(message)
+        dispatch(authRequestedFailed(errorMessage))
+      }
     }
   }
 

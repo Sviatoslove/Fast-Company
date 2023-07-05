@@ -2,18 +2,54 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import UserAvatar from '../common/UserAvatar'
-import { objectsEqual } from '../../utils'
-import { useSelector } from 'react-redux'
-import { selectUserId } from '../../store/users'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectUserId, userUpdated } from '../../store/users'
+import Button from '../common/Button'
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
 
 const UserCard = ({ user }) => {
+  const dispatch = useDispatch()
+  const { userId } = useParams()
   const history = useHistory()
   const currentUserId = useSelector(selectUserId())
 
-  const editUser = objectsEqual(user._id, currentUserId)
+  const editUser = user._id === currentUserId
 
   const handleToEdit = () => {
     history.push(history.location.pathname + '/edit')
+  }
+
+  const buttonUpStatus = () => {
+    if (user.rate === 5) {
+      return { disabled: true, class: '' }
+    }
+    return { disabled: false, class: '-fill' }
+  }
+
+  const buttonDownStatus = () => {
+    if (user.rate === 1) {
+      return { disabled: true, class: '' }
+    }
+    return { disabled: false, class: '-fill' }
+  }
+
+  const incrementRate = () => {
+    if (user.rate < 5) {
+      return user.rate + 1
+    }
+  }
+  const decrementRate = () => {
+    if (user.rate > 1) {
+      return user.rate - 1
+    }
+  }
+
+  const handleRateDown = () => {
+    dispatch(userUpdated({ _id: userId, rate: decrementRate() }))
+  }
+
+  const handleRateUp = () => {
+    dispatch(userUpdated({ _id: userId, rate: incrementRate() }))
   }
 
   return (
@@ -33,11 +69,38 @@ const UserCard = ({ user }) => {
             <h4>{user.name}</h4>
             <p className='text-secondary mb-1'>{user.profession.name}</p>
             <div className='text-muted'>
-              <i
-                className='bi bi-caret-down-fill text-primary'
-                role='button'
-              ></i>
-              <i className='bi bi-caret-up text-secondary' role='button'></i>
+              {!editUser ? (
+                <>
+                  <Button
+                    handleClick={handleRateDown}
+                    content={
+                      <i
+                        className={
+                          'text-primary bi bi-caret-down' +
+                          buttonDownStatus().class
+                        }
+                        role='button'
+                      ></i>
+                    }
+                    disabled={buttonDownStatus().disabled}
+                  />
+                  <Button
+                    handleClick={handleRateUp}
+                    content={
+                      <i
+                        className={
+                          'text-primary bi bi-caret-up' + buttonUpStatus().class
+                        }
+                        role='button'
+                      ></i>
+                    }
+                    disabled={buttonUpStatus().disabled}
+                  />
+                </>
+              ) : (
+                <span>Rate:</span>
+              )}
+
               <span className='ms-2'>{user.rate}</span>
             </div>
           </div>

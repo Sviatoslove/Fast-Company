@@ -8,9 +8,9 @@ import {
   TextField
 } from '../common/form'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectGetQualities } from '../../store/qualities'
+import { selectQualities } from '../../store/qualities'
 import { selectGetProfessions } from '../../store/professions'
-import { signUp } from '../../store/users'
+import { selectAuthError, signUp } from '../../store/users'
 
 const RegisterForm = () => {
   const dispatch = useDispatch()
@@ -24,11 +24,17 @@ const RegisterForm = () => {
     license: false
   })
   const professions = useSelector(selectGetProfessions())
-  const qualities = useSelector(selectGetQualities())
-  const [errors, setErrors] = useState({})
+  const qualities = useSelector(selectQualities())
+  const [errors, setErrors] = useState(null)
+  const errorRegister = useSelector(selectAuthError())
+
+  useEffect(() => {
+    setErrors(errorRegister)
+  }, [errorRegister])
 
   const handleChange = ({ target }) => {
     setData((state) => ({ ...state, [target.name]: target.value }))
+    setErrors(null)
   }
 
   const validate = () => {
@@ -110,6 +116,7 @@ const RegisterForm = () => {
       >
         Согласен с <a href=''>лицензионным соглашением</a>
       </CheckboxField>
+      {errorRegister && <p className='text-danger'>{errorRegister}</p>}
       <button
         type='submit'
         disabled={isValid}

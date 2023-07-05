@@ -11,8 +11,8 @@ import { BackHistoryButton } from '../../common/table'
 import { validator, validatorConfig } from '../../../utils'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  selectGetQualities,
-  selectGetQualitiesLoadingStatus
+  selectQualities,
+  selectQualitiesLoadingStatus
 } from '../../../store/qualities'
 import {
   selectGetProfessions,
@@ -30,9 +30,9 @@ const EditUserPage = () => {
   const professionsIsLoadingStatus = useSelector(
     selectGetProfessionsLoadingStatus()
   )
-  const qualities = useSelector(selectGetQualities())
+  const qualities = useSelector(selectQualities())
   const qualitiesIsLoadingStatus = useSelector(
-    selectGetQualitiesLoadingStatus()
+    selectQualitiesLoadingStatus()
   )
 
   const currentUser = useSelector(selectCurrentUser())

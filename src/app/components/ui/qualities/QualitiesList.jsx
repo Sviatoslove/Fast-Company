@@ -3,19 +3,15 @@ import PropTypes from 'prop-types'
 import Quality from './Quality'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  getQualitiesByIds,
-  selectGetQualitiesLoadingStatus,
+  selectQualitiesByIds,
+  selectQualitiesLoadingStatus,
   loadQualitiesList
 } from '../../../store/qualities'
 
 const QualitiesList = ({ qualities }) => {
   const dispatch = useDispatch()
-  const qualitiesIsLoadingStatus = useSelector(
-    selectGetQualitiesLoadingStatus()
-  )
-  if (qualitiesIsLoadingStatus) return 'Loading'
-
-  const qualitiesList = useSelector(getQualitiesByIds(qualities))
+  const qualitiesIsLoadingStatus = useSelector(selectQualitiesLoadingStatus())
+  const qualitiesList = useSelector(selectQualitiesByIds(qualities))
 
   useEffect(() => {
     dispatch(loadQualitiesList())
@@ -23,9 +19,11 @@ const QualitiesList = ({ qualities }) => {
 
   return (
     <>
-      {qualitiesList.map((qual) => {
-        return <Quality key={qual._id} {...qual} />
-      })}
+      {!qualitiesIsLoadingStatus
+        ? qualitiesList.map((qual) => {
+            return <Quality key={qual._id} {...qual} />
+          })
+        : 'Loading...'}
     </>
   )
 }
