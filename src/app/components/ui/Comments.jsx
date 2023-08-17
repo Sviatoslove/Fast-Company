@@ -18,7 +18,7 @@ const Comments = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(loadCommentsList(userId))
-  }, [])
+  }, [userId])
   const isLoading = useSelector(selectCommentsLoadingStatus())
   const comments = useSelector(selectComments())
 
